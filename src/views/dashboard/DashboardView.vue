@@ -85,6 +85,11 @@
                     </el-select>
                 </div>
 
+                <div class="filter-item">
+                    <label>Поиск</label>
+                    <el-input v-model="dashboardStore.filters.search" placeholder="Дата, категория, регион" clearable />
+                </div>
+
                 <div class="filter-actions">
                     <el-button type="primary">Применить</el-button>
                     <el-button>Сбросить</el-button>
@@ -395,6 +400,10 @@ const dashboardStore = useDashboardStore()
     gap: 10px;
 }
 
+.filters-card {
+  grid-template-columns: 260px 190px 220px 190px 240px auto;
+}
+
 .chart-card {
     padding: 20px 22px;
     margin-bottom: 20px;
@@ -482,7 +491,7 @@ const dashboardStore = useDashboardStore()
 }
 
 .metric-switcher :deep(.el-checkbox-button__inner) {
-  padding: 8px 14px;
-  font-size: 13px;
+    padding: 8px 14px;
+    font-size: 13px;
 }
 </style>

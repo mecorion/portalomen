@@ -19,6 +19,7 @@ export type DashboardFilters = {
   region: string
   period: [string, string] | null
   group: GroupType
+  search: string
 }
 
 function parseDate(date: string): Date {
@@ -52,7 +53,8 @@ export const useDashboardStore = defineStore('dashboard', {
       category: 'all',
       region: 'all',
       period: ['2024-05-01', '2024-05-31'],
-      group: 'day'
+      group: 'day',
+      search: ''
     } as DashboardFilters,
 
     activeMetrics: ['revenue', 'profit', 'orders'] as ChartMetric[],
@@ -262,6 +264,7 @@ export const useDashboardStore = defineStore('dashboard', {
         (total / this.groupedRows.length).toFixed(2)
       )
     },
+
     filteredRows(state): DashboardRow[] {
       return state.rows.filter((row) => {
         const rowDate = parseDate(row.date)
@@ -273,6 +276,14 @@ export const useDashboardStore = defineStore('dashboard', {
         const regionMatch =
           state.filters.region === 'all' ||
           row.region === state.filters.region
+
+        const search = state.filters.search.trim().toLowerCase()
+
+        const searchMatch =
+          !search ||
+          row.date.toLowerCase().includes(search) ||
+          row.category.toLowerCase().includes(search) ||
+          row.region.toLowerCase().includes(search)
 
         let periodMatch = true
 
@@ -288,7 +299,7 @@ export const useDashboardStore = defineStore('dashboard', {
           periodMatch = rowDate >= fromDate && rowDate <= toDate
         }
 
-        return categoryMatch && regionMatch && periodMatch
+        return categoryMatch && regionMatch && periodMatch && searchMatch
       })
     },
 
