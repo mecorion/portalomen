@@ -92,9 +92,7 @@
                     </el-select>
                 </div>
 
-                <div class="chart-placeholder">
-                    Здесь будет график
-                </div>
+                <DashboardChart />
             </section>
 
             <section class="table-card">
@@ -174,6 +172,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
+import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 
 const dashboardStore = useDashboardStore()
 
