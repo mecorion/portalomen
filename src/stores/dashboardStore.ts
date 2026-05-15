@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+export type GroupType = 'day' | 'week' | 'month'
+
 export type DashboardRow = {
   id: number
   date: string
@@ -15,13 +17,42 @@ export type DashboardRow = {
 export type DashboardFilters = {
   category: string
   region: string
+  period: [string, string] | null
+  group: GroupType
+}
+
+function parseDate(date: string): Date {
+  const [day, month, year] = date.split('.').map(Number)
+  return new Date(year, month - 1, day)
+}
+
+function formatDate(date: Date): string {
+  return date.toLocaleDateString('ru-RU')
+}
+
+function getWeekKey(date: Date): string {
+  const start = new Date(date)
+  const day = start.getDay() || 7
+
+  start.setDate(start.getDate() - day + 1)
+
+  return `Неделя ${formatDate(start)}`
+}
+
+function getMonthKey(date: Date): string {
+  return date.toLocaleDateString('ru-RU', {
+    month: 'long',
+    year: 'numeric'
+  })
 }
 
 export const useDashboardStore = defineStore('dashboard', {
   state: () => ({
     filters: {
       category: 'all',
-      region: 'all'
+      region: 'all',
+      period: ['2024-05-01', '2024-05-31'],
+      group: 'day'
     } as DashboardFilters,
 
     rows: [
@@ -194,35 +225,97 @@ export const useDashboardStore = defineStore('dashboard', {
   }),
 
   getters: {
-    filteredRows: (state) => {
+    filteredRows(state): DashboardRow[] {
       return state.rows.filter((row) => {
+        const rowDate = parseDate(row.date)
 
         const categoryMatch =
-          state.filters.category === 'all'
-          || row.category === state.filters.category
+          state.filters.category === 'all' ||
+          row.category === state.filters.category
 
         const regionMatch =
-          state.filters.region === 'all'
-          || row.region === state.filters.region
+          state.filters.region === 'all' ||
+          row.region === state.filters.region
 
-        return categoryMatch && regionMatch
+        let periodMatch = true
+
+        if (state.filters.period) {
+          const [from, to] = state.filters.period
+
+          const fromDate = new Date(from)
+          const toDate = new Date(to)
+
+          fromDate.setHours(0, 0, 0, 0)
+          toDate.setHours(23, 59, 59, 999)
+
+          periodMatch = rowDate >= fromDate && rowDate <= toDate
+        }
+
+        return categoryMatch && regionMatch && periodMatch
       })
     },
 
+    groupedRows(): DashboardRow[] {
+      if (this.filters.group === 'day') {
+        return this.filteredRows
+      }
+
+      const map = new Map<string, DashboardRow>()
+
+      this.filteredRows.forEach((row) => {
+        const date = parseDate(row.date)
+
+        const key =
+          this.filters.group === 'week'
+            ? getWeekKey(date)
+            : getMonthKey(date)
+
+        const existing = map.get(key)
+
+        if (!existing) {
+          map.set(key, {
+            ...row,
+            id: Date.now() + map.size,
+            date: key
+          })
+
+          return
+        }
+
+        existing.revenue += row.revenue
+        existing.profit += row.profit
+        existing.orders += row.orders
+
+        existing.averageCheck = Math.round(existing.revenue / existing.orders)
+
+        existing.conversion = Number(
+          ((existing.conversion + row.conversion) / 2).toFixed(2)
+        )
+      })
+
+      return Array.from(map.values())
+    },
+
     chartLabels(): string[] {
-      return this.filteredRows.map((row) => row.date.slice(0, 5))
+      return this.groupedRows.map((row) => {
+        if (this.filters.group === 'day') {
+          return row.date.slice(0, 5)
+        }
+
+        return row.date
+      })
     },
 
     revenueData(): number[] {
-      return this.filteredRows.map((row) => row.revenue)
+      return this.groupedRows.map((row) => row.revenue)
     },
 
     profitData(): number[] {
-      return this.filteredRows.map((row) => row.profit)
+      return this.groupedRows.map((row) => row.profit)
     },
 
     ordersData(): number[] {
-      return this.filteredRows.map((row) => row.orders)
+      return this.groupedRows.map((row) => row.orders)
     }
   },
 
@@ -256,7 +349,7 @@ export const useDashboardStore = defineStore('dashboard', {
         averageCheck: 0,
         conversion: 0,
         category: 'Электроника',
-        region: ''
+        region: 'Алматы'
       })
     },
 

@@ -2,8 +2,15 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="logo">
-                <div class="logo-icon">▥</div>
-                <span>Analytics</span>
+                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20.9423 3.05768C23.4117 5.52701 21.4099 11.5324 16.4712 16.4711C11.5326 21.4097 5.5272 23.4115 3.05787 20.9422C0.588547 18.4728 2.59033 12.4675 7.52899 7.5288C12.4676 2.59014 18.473 0.588345 20.9423 3.05768ZM3.05768 3.05782C0.588349 5.52715 2.59013 11.5325 7.52879 16.4712C12.4674 21.4099 18.4728 23.4117 20.9421 20.9423C23.4115 18.473 21.4097 12.4676 16.471 7.52894C11.5324 2.59028 5.527 0.588485 3.05768 3.05782Z"
+                        stroke-width="1.5" />
+                    <path
+                        d="M14.5 12C14.5 13.3807 13.3807 14.5 12 14.5C10.6193 14.5 9.5 13.3807 9.5 12C9.5 10.6193 10.6193 9.5 12 9.5C13.3807 9.5 14.5 10.6193 14.5 12Z"
+                        stroke-width="1.5" />
+                </svg>
+                <span>OMEN</span>
             </div>
 
             <nav class="menu">
@@ -45,16 +52,16 @@
             <section class="filters-card">
                 <div class="filter-item">
                     <label>Период</label>
-                    <el-date-picker v-model="filters.period" type="daterange" format="DD.MM.YYYY"
+                    <el-date-picker v-model="dashboardStore.filters.period" type="daterange" format="DD.MM.YYYY"
                         value-format="YYYY-MM-DD" start-placeholder="Начало" end-placeholder="Конец" />
                 </div>
 
                 <div class="filter-item">
                     <label>Группировка</label>
-                    <el-select v-model="filters.group" placeholder="Группировка">
-                        <el-option label="По дням" value="По дням" />
-                        <el-option label="По неделям" value="По неделям" />
-                        <el-option label="По месяцам" value="По месяцам" />
+                    <el-select v-model="dashboardStore.filters.group" placeholder="Группировка">
+                        <el-option label="По дням" value="day" />
+                        <el-option label="По неделям" value="week" />
+                        <el-option label="По месяцам" value="month" />
                     </el-select>
                 </div>
 
@@ -104,7 +111,7 @@
                     </el-button>
                 </div>
 
-                <el-table :data="dashboardStore.filteredRows" class="dashboard-table" height="520" border>
+                <el-table :data="dashboardStore.groupedRows" class="dashboard-table" height="520" border>
                     <el-table-column type="selection" width="42" />
 
                     <el-table-column prop="date" label="Дата" width="120">
@@ -170,16 +177,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 
 const dashboardStore = useDashboardStore()
-
-const filters = reactive({
-  period: ['2024-05-01', '2024-05-31'],
-  group: 'day'
-})
 </script>
 
 <style scoped>
@@ -204,16 +205,16 @@ const filters = reactive({
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     height: 44px;
     padding: 0 12px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 700;
     margin-bottom: 28px;
 }
 
 .logo-icon {
-    font-size: 24px;
+    stroke: #ffffff;
 }
 
 .menu {
@@ -424,45 +425,45 @@ const filters = reactive({
 }
 
 .dashboard-table {
-  width: 100%;
-  font-size: 13px;
+    width: 100%;
+    font-size: 13px;
 }
 
 .dashboard-table :deep(.el-table__cell) {
-  padding: 5px 0;
+    padding: 5px 0;
 }
 
 .dashboard-table :deep(.cell) {
-  padding: 0 8px;
+    padding: 0 8px;
 }
 
 .dashboard-table :deep(.el-input__wrapper),
 .dashboard-table :deep(.el-select__wrapper) {
-  min-height: 30px;
-  border-radius: 7px;
-  box-shadow: 0 0 0 1px #dce7f5 inset;
+    min-height: 30px;
+    border-radius: 7px;
+    box-shadow: 0 0 0 1px #dce7f5 inset;
 }
 
 .dashboard-table :deep(.el-input-number) {
-  width: 100%;
+    width: 100%;
 }
 
 .dashboard-table :deep(.el-input-number .el-input__wrapper) {
-  width: 100%;
+    width: 100%;
 }
 
 .dashboard-table :deep(.el-input-number__increase),
 .dashboard-table :deep(.el-input-number__decrease) {
-  width: 22px;
+    width: 22px;
 }
 
 .dashboard-table :deep(.el-table__header th) {
-  background: #f8fbff;
-  color: #5f6f89;
-  font-weight: 700;
+    background: #f8fbff;
+    color: #5f6f89;
+    font-weight: 700;
 }
 
 .dashboard-table :deep(.el-table__row:hover > td) {
-  background: #f5f9ff;
+    background: #f5f9ff;
 }
 </style>
