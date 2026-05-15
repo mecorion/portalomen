@@ -110,7 +110,7 @@
         </div>
 
         <div class="table-placeholder">
-          Здесь будет таблица
+          Загружено строк: {{ dashboardStore.rows.length }}
         </div>
       </section>
     </main>
@@ -119,6 +119,9 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
+import { useDashboardStore } from '../../stores/dashboardStore'
+
+const dashboardStore = useDashboardStore()
 
 const filters = reactive({
   period: ['2024-05-01', '2024-05-31'],
