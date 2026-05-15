@@ -52,28 +52,28 @@
                 <div class="filter-item">
                     <label>Группировка</label>
                     <el-select v-model="filters.group" placeholder="Группировка">
-                        <el-option label="По дням" value="day" />
-                        <el-option label="По неделям" value="week" />
-                        <el-option label="По месяцам" value="month" />
+                        <el-option label="По дням" value="По дням" />
+                        <el-option label="По неделям" value="По неделям" />
+                        <el-option label="По месяцам" value="По месяцам" />
                     </el-select>
                 </div>
 
                 <div class="filter-item">
                     <label>Категория</label>
-                    <el-select v-model="filters.category" placeholder="Категория">
+                    <el-select v-model="dashboardStore.filters.category">
                         <el-option label="Все категории" value="all" />
-                        <el-option label="Электроника" value="electronics" />
-                        <el-option label="Бытовая техника" value="home" />
-                        <el-option label="Дом и сад" value="garden" />
+                        <el-option label="Электроника" value="Электроника" />
+                        <el-option label="Бытовая техника" value="Бытовая техника" />
+                        <el-option label="Дом и сад" value="Дом и сад" />
                     </el-select>
                 </div>
 
                 <div class="filter-item">
                     <label>Регион</label>
-                    <el-select v-model="filters.region" placeholder="Регион">
+                    <el-select v-model="dashboardStore.filters.region">
                         <el-option label="Все регионы" value="all" />
-                        <el-option label="Алматы" value="almaty" />
-                        <el-option label="Астана" value="astana" />
+                        <el-option label="Алматы" value="Алматы" />
+                        <el-option label="Астана" value="Астана" />
                     </el-select>
                 </div>
 
@@ -104,7 +104,7 @@
                     </el-button>
                 </div>
 
-                <el-table :data="dashboardStore.rows" class="dashboard-table" height="520" border>
+                <el-table :data="dashboardStore.filteredRows" class="dashboard-table" height="520" border>
                     <el-table-column type="selection" width="42" />
 
                     <el-table-column prop="date" label="Дата" width="120">
@@ -177,10 +177,8 @@ import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 const dashboardStore = useDashboardStore()
 
 const filters = reactive({
-    period: ['2024-05-01', '2024-05-31'],
-    group: 'day',
-    category: 'all',
-    region: 'all'
+  period: ['2024-05-01', '2024-05-31'],
+  group: 'day'
 })
 </script>
 

@@ -9,10 +9,21 @@ export type DashboardRow = {
   averageCheck: number
   conversion: number
   category: string
+  region: string
+}
+
+export type DashboardFilters = {
+  category: string
+  region: string
 }
 
 export const useDashboardStore = defineStore('dashboard', {
   state: () => ({
+    filters: {
+      category: 'all',
+      region: 'all'
+    } as DashboardFilters,
+
     rows: [
       {
         id: 1,
@@ -22,7 +33,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 320,
         averageCheck: 2656,
         conversion: 2.35,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Алматы'
       },
       {
         id: 2,
@@ -32,7 +44,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 280,
         averageCheck: 2573,
         conversion: 2.15,
-        category: 'Бытовая техника'
+        category: 'Бытовая техника',
+        region: 'Алматы'
       },
       {
         id: 3,
@@ -42,7 +55,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 340,
         averageCheck: 2677,
         conversion: 2.48,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Алматы'
       },
       {
         id: 4,
@@ -52,7 +66,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 210,
         averageCheck: 2620,
         conversion: 1.95,
-        category: 'Дом и сад'
+        category: 'Дом и сад',
+        region: 'Алматы'
       },
       {
         id: 5,
@@ -62,7 +77,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 380,
         averageCheck: 2685,
         conversion: 2.65,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Алматы'
       },
       {
         id: 6,
@@ -72,7 +88,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 300,
         averageCheck: 2602,
         conversion: 2.25,
-        category: 'Бытовая техника'
+        category: 'Бытовая техника',
+        region: 'Алматы'
       },
       {
         id: 7,
@@ -82,7 +99,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 330,
         averageCheck: 2699,
         conversion: 2.3,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Астана'
       },
       {
         id: 8,
@@ -92,7 +110,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 250,
         averageCheck: 2682,
         conversion: 1.88,
-        category: 'Дом и сад'
+        category: 'Дом и сад',
+        region: 'Астана'
       },
       {
         id: 9,
@@ -102,7 +121,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 360,
         averageCheck: 2612,
         conversion: 2.52,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Астана'
       },
       {
         id: 10,
@@ -112,7 +132,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 270,
         averageCheck: 2632,
         conversion: 2.1,
-        category: 'Бытовая техника'
+        category: 'Бытовая техника',
+        region: 'Астана'
       },
       {
         id: 11,
@@ -122,7 +143,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 310,
         averageCheck: 2808,
         conversion: 2.4,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Астана'
       },
       {
         id: 12,
@@ -132,7 +154,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 260,
         averageCheck: 2847,
         conversion: 2.18,
-        category: 'Дом и сад'
+        category: 'Дом и сад',
+        region: 'Астана'
       },
       {
         id: 13,
@@ -142,7 +165,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 370,
         averageCheck: 2651,
         conversion: 2.58,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: 'Астана'
       },
       {
         id: 14,
@@ -152,7 +176,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 300,
         averageCheck: 2734,
         conversion: 2.2,
-        category: 'Бытовая техника'
+        category: 'Бытовая техника',
+        region: 'Астана'
       },
       {
         id: 15,
@@ -162,30 +187,53 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 240,
         averageCheck: 2688,
         conversion: 1.97,
-        category: 'Дом и сад'
+        category: 'Дом и сад',
+        region: 'Астана'
       }
     ] as DashboardRow[]
   }),
 
   getters: {
-    chartLabels: (state) => {
-      return state.rows.map((row) => row.date.slice(0, 5))
+    filteredRows: (state) => {
+      return state.rows.filter((row) => {
+
+        const categoryMatch =
+          state.filters.category === 'all'
+          || row.category === state.filters.category
+
+        const regionMatch =
+          state.filters.region === 'all'
+          || row.region === state.filters.region
+
+        return categoryMatch && regionMatch
+      })
     },
 
-    revenueData: (state) => {
-      return state.rows.map((row) => row.revenue)
+    chartLabels(): string[] {
+      return this.filteredRows.map((row) => row.date.slice(0, 5))
     },
 
-    profitData: (state) => {
-      return state.rows.map((row) => row.profit)
+    revenueData(): number[] {
+      return this.filteredRows.map((row) => row.revenue)
     },
 
-    ordersData: (state) => {
-      return state.rows.map((row) => row.orders)
+    profitData(): number[] {
+      return this.filteredRows.map((row) => row.profit)
+    },
+
+    ordersData(): number[] {
+      return this.filteredRows.map((row) => row.orders)
     }
   },
 
   actions: {
+    setFilters(payload: Partial<DashboardFilters>) {
+      this.filters = {
+        ...this.filters,
+        ...payload
+      }
+    },
+
     updateRow(id: number, payload: Partial<DashboardRow>) {
       const row = this.rows.find((item) => item.id === id)
 
@@ -207,7 +255,8 @@ export const useDashboardStore = defineStore('dashboard', {
         orders: 0,
         averageCheck: 0,
         conversion: 0,
-        category: 'Электроника'
+        category: 'Электроника',
+        region: ''
       })
     },
 
