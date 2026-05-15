@@ -33,84 +33,11 @@ use([
 
 const dashboardStore = useDashboardStore()
 
-const chartOption = computed(() => ({
-  tooltip: {
-    trigger: 'axis',
-    backgroundColor: '#ffffff',
-    borderColor: '#dce7f5',
-    borderWidth: 1,
-    textStyle: {
-      color: '#1f2937',
-      fontSize: 12
-    }
-  },
+const chartOption = computed(() => {
+  const series = []
 
-  legend: {
-    top: 0,
-    right: 12,
-    itemWidth: 10,
-    itemHeight: 10,
-    textStyle: {
-      color: '#5f6f89',
-      fontSize: 12
-    },
-    data: ['Выручка, ₽', 'Прибыль, ₽', 'Заказы, шт.']
-  },
-
-  grid: {
-    left: 56,
-    right: 36,
-    top: 42,
-    bottom: 36
-  },
-
-  xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    data: dashboardStore.chartLabels,
-    axisLine: {
-      lineStyle: {
-        color: '#dce7f5'
-      }
-    },
-    axisTick: {
-      show: false
-    },
-    axisLabel: {
-      color: '#718096',
-      fontSize: 12
-    }
-  },
-
-  yAxis: [
-    {
-      type: 'value',
-      name: '',
-      axisLabel: {
-        color: '#718096',
-        fontSize: 12
-      },
-      splitLine: {
-        lineStyle: {
-          color: '#edf2f7'
-        }
-      }
-    },
-    {
-      type: 'value',
-      name: '',
-      axisLabel: {
-        color: '#718096',
-        fontSize: 12
-      },
-      splitLine: {
-        show: false
-      }
-    }
-  ],
-
-  series: [
-    {
+  if (dashboardStore.activeMetrics.includes('revenue')) {
+    series.push({
       name: 'Выручка, ₽',
       type: 'line',
       smooth: true,
@@ -138,8 +65,11 @@ const chartOption = computed(() => ({
         }
       },
       data: dashboardStore.revenueData
-    },
-    {
+    })
+  }
+
+  if (dashboardStore.activeMetrics.includes('profit')) {
+    series.push({
       name: 'Прибыль, ₽',
       type: 'line',
       smooth: true,
@@ -154,8 +84,11 @@ const chartOption = computed(() => ({
         color: '#38bdf8'
       },
       data: dashboardStore.profitData
-    },
-    {
+    })
+  }
+
+  if (dashboardStore.activeMetrics.includes('orders')) {
+    series.push({
       name: 'Заказы, шт.',
       type: 'line',
       smooth: true,
@@ -171,9 +104,85 @@ const chartOption = computed(() => ({
         color: '#6366f1'
       },
       data: dashboardStore.ordersData
-    }
-  ]
-}))
+    })
+  }
+
+  return {
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: '#ffffff',
+      borderColor: '#dce7f5',
+      borderWidth: 1,
+      textStyle: {
+        color: '#1f2937',
+        fontSize: 12
+      }
+    },
+
+    legend: {
+      top: 0,
+      right: 12,
+      itemWidth: 10,
+      itemHeight: 10,
+      textStyle: {
+        color: '#5f6f89',
+        fontSize: 12
+      }
+    },
+
+    grid: {
+      left: 56,
+      right: 36,
+      top: 42,
+      bottom: 36
+    },
+
+    xAxis: {
+      type: 'category',
+      boundaryGap: false,
+      data: dashboardStore.chartLabels,
+      axisLine: {
+        lineStyle: {
+          color: '#dce7f5'
+        }
+      },
+      axisTick: {
+        show: false
+      },
+      axisLabel: {
+        color: '#718096',
+        fontSize: 12
+      }
+    },
+
+    yAxis: [
+      {
+        type: 'value',
+        axisLabel: {
+          color: '#718096',
+          fontSize: 12
+        },
+        splitLine: {
+          lineStyle: {
+            color: '#edf2f7'
+          }
+        }
+      },
+      {
+        type: 'value',
+        axisLabel: {
+          color: '#718096',
+          fontSize: 12
+        },
+        splitLine: {
+          show: false
+        }
+      }
+    ],
+
+    series
+  }
+})
 </script>
 
 <style scoped>

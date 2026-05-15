@@ -2,7 +2,8 @@
     <div class="dashboard-layout">
         <aside class="sidebar">
             <div class="logo">
-                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="logo-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M20.9423 3.05768C23.4117 5.52701 21.4099 11.5324 16.4712 16.4711C11.5326 21.4097 5.5272 23.4115 3.05787 20.9422C0.588547 18.4728 2.59033 12.4675 7.52899 7.5288C12.4676 2.59014 18.473 0.588345 20.9423 3.05768ZM3.05768 3.05782C0.588349 5.52715 2.59013 11.5325 7.52879 16.4712C12.4674 21.4099 18.4728 23.4117 20.9421 20.9423C23.4115 18.473 21.4097 12.4676 16.471 7.52894C11.5324 2.59028 5.527 0.588485 3.05768 3.05782Z"
                         stroke-width="1.5" />
@@ -95,10 +96,19 @@
             <section class="chart-card">
                 <div class="section-header">
                     <h2>Динамика показателей</h2>
-                    <el-select model-value="line" style="width: 180px">
-                        <el-option label="Линейный график" value="line" />
-                        <el-option label="Столбчатый график" value="bar" />
-                    </el-select>
+                    <el-checkbox-group v-model="dashboardStore.activeMetrics" class="metric-switcher">
+                        <el-checkbox-button label="revenue">
+                            Выручка
+                        </el-checkbox-button>
+
+                        <el-checkbox-button label="profit">
+                            Прибыль
+                        </el-checkbox-button>
+
+                        <el-checkbox-button label="orders">
+                            Заказы
+                        </el-checkbox-button>
+                    </el-checkbox-group>
                 </div>
 
                 <DashboardChart />
@@ -184,6 +194,7 @@ import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 
 const dashboardStore = useDashboardStore()
+
 </script>
 
 <style scoped>
@@ -468,5 +479,10 @@ const dashboardStore = useDashboardStore()
 
 .dashboard-table :deep(.el-table__row:hover > td) {
     background: #f5f9ff;
+}
+
+.metric-switcher :deep(.el-checkbox-button__inner) {
+  padding: 8px 14px;
+  font-size: 13px;
 }
 </style>

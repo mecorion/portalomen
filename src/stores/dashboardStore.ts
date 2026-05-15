@@ -55,6 +55,8 @@ export const useDashboardStore = defineStore('dashboard', {
       group: 'day'
     } as DashboardFilters,
 
+    activeMetrics: ['revenue', 'profit', 'orders'] as ChartMetric[],
+
     rows: [
       {
         id: 1,
@@ -355,6 +357,11 @@ export const useDashboardStore = defineStore('dashboard', {
   },
 
   actions: {
+
+    setActiveMetrics(metrics: ChartMetric[]) {
+      this.activeMetrics = metrics
+    },
+
     setFilters(payload: Partial<DashboardFilters>) {
       this.filters = {
         ...this.filters,
