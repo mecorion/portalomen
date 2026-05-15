@@ -225,6 +225,41 @@ export const useDashboardStore = defineStore('dashboard', {
   }),
 
   getters: {
+    totalRevenue(): number {
+      return this.groupedRows.reduce(
+        (sum, row) => sum + row.revenue,
+        0
+      )
+    },
+
+    totalProfit(): number {
+      return this.groupedRows.reduce(
+        (sum, row) => sum + row.profit,
+        0
+      )
+    },
+
+    totalOrders(): number {
+      return this.groupedRows.reduce(
+        (sum, row) => sum + row.orders,
+        0
+      )
+    },
+
+    averageConversion(): number {
+      if (!this.groupedRows.length) {
+        return 0
+      }
+
+      const total = this.groupedRows.reduce(
+        (sum, row) => sum + row.conversion,
+        0
+      )
+
+      return Number(
+        (total / this.groupedRows.length).toFixed(2)
+      )
+    },
     filteredRows(state): DashboardRow[] {
       return state.rows.filter((row) => {
         const rowDate = parseDate(row.date)

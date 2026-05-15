@@ -90,6 +90,8 @@
                 </div>
             </section>
 
+            <DashboardStats />
+
             <section class="chart-card">
                 <div class="section-header">
                     <h2>Динамика показателей</h2>
@@ -179,6 +181,7 @@
 <script setup lang="ts">
 import { useDashboardStore } from '../../stores/dashboardStore'
 import DashboardChart from '../../components/dashboard/DashboardChart.vue'
+import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 
 const dashboardStore = useDashboardStore()
 </script>
