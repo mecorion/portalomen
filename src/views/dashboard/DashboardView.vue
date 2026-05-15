@@ -123,10 +123,17 @@
                 <div class="section-header">
                     <h2>Данные за период</h2>
 
-                    <el-button type="primary" @click="dashboardStore.addRow">
+                    <el-button
+                      type="primary"
+                      @click="dashboardStore.addRow"
+                      :disabled="isReadOnlyTable"
+                    >
                         Добавить запись
                     </el-button>
                 </div>
+
+                <el-alert v-if="isReadOnlyTable" title="Редактирование недоступно для агрегированных данных" type="info"
+                    :closable="false" class="table-alert" />
 
                 <el-table :data="dashboardStore.groupedRows" class="dashboard-table" height="520" border>
                     <el-table-column type="selection" width="42" />
@@ -194,11 +201,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 
 const dashboardStore = useDashboardStore()
+
+const isReadOnlyTable = computed(() => {
+    return dashboardStore.filters.group !== 'day'
+})
 
 </script>
 
@@ -401,7 +413,7 @@ const dashboardStore = useDashboardStore()
 }
 
 .filters-card {
-  grid-template-columns: 260px 190px 220px 190px 240px auto;
+    grid-template-columns: 260px 190px 220px 190px 240px auto;
 }
 
 .chart-card {
