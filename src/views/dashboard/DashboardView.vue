@@ -46,7 +46,7 @@
 
                 <div class="topbar-actions">
                     <button class="icon-button">🔔</button>
-                    <button class="export-button">Экспорт</button>
+                    <button class="export-button" @click="exportToCsv">Экспорт</button>
                 </div>
             </header>
 
@@ -291,6 +291,52 @@ function formatNumber(value: number): string {
 
 function formatPercent(value: number): string {
     return value.toFixed(2) + '%'
+}
+
+function exportToCsv() {
+  const rows = dashboardStore.groupedRows
+
+  const headers = [
+    'Дата',
+    'Выручка',
+    'Прибыль',
+    'Заказы',
+    'Средний чек',
+    'Конверсия',
+    'Категория',
+    'Регион'
+  ]
+
+  const csvRows = rows.map((row) => [
+    row.date,
+    row.revenue,
+    row.profit,
+    row.orders,
+    row.averageCheck,
+    row.conversion,
+    row.category,
+    row.region
+  ])
+
+  const csvContent = [
+    headers,
+    ...csvRows
+  ]
+    .map((row) => row.map((cell) => `"${cell}"`).join(';'))
+    .join('\n')
+
+  const blob = new Blob(['\uFEFF' + csvContent], {
+    type: 'text/csv;charset=utf-8;'
+  })
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+
+  link.href = url
+  link.download = 'dashboard-export.csv'
+  link.click()
+
+  URL.revokeObjectURL(url)
 }
 
 </script>
