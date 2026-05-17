@@ -2,6 +2,8 @@ import { defineStore } from 'pinia'
 
 export type GroupType = 'day' | 'week' | 'month'
 
+export type ChartType = 'line' | 'bar'
+
 export type DashboardRow = {
   id: number
   date: string
@@ -56,6 +58,8 @@ export const useDashboardStore = defineStore('dashboard', {
       group: 'day',
       search: ''
     } as DashboardFilters,
+
+    chartType: 'line' as ChartType,
 
     activeMetrics: ['revenue', 'profit', 'orders'] as ChartMetric[],
 
@@ -368,6 +372,10 @@ export const useDashboardStore = defineStore('dashboard', {
   },
 
   actions: {
+
+    setChartType(type: ChartType) {
+      this.chartType = type
+    },
 
     setActiveMetrics(metrics: ChartMetric[]) {
       this.activeMetrics = metrics

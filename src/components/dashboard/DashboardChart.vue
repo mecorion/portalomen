@@ -1,9 +1,5 @@
 <template>
-  <v-chart
-    class="chart"
-    :option="chartOption"
-    autoresize
-  />
+  <v-chart class="chart" :option="chartOption" autoresize />
 </template>
 
 <script setup lang="ts">
@@ -13,7 +9,7 @@ import { useDashboardStore } from '../../stores/dashboardStore'
 
 import { use } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
-import { LineChart } from 'echarts/charts'
+import { LineChart, BarChart } from 'echarts/charts'
 
 import {
   GridComponent,
@@ -28,7 +24,8 @@ use([
   GridComponent,
   TooltipComponent,
   LegendComponent,
-  DatasetComponent
+  DatasetComponent,
+  BarChart
 ])
 
 const dashboardStore = useDashboardStore()
@@ -39,8 +36,8 @@ const chartOption = computed(() => {
   if (dashboardStore.activeMetrics.includes('revenue')) {
     series.push({
       name: 'Выручка, ₽',
-      type: 'line',
-      smooth: true,
+      type: dashboardStore.chartType,
+      smooth: dashboardStore.chartType === 'line',
       yAxisIndex: 0,
       symbol: 'circle',
       symbolSize: 7,
@@ -51,19 +48,21 @@ const chartOption = computed(() => {
       itemStyle: {
         color: '#1677ff'
       },
-      areaStyle: {
-        color: {
-          type: 'linear',
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            { offset: 0, color: 'rgba(22, 119, 255, 0.18)' },
-            { offset: 1, color: 'rgba(22, 119, 255, 0.02)' }
-          ]
+      areaStyle: dashboardStore.chartType === 'line'
+        ? {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: 'rgba(22, 119, 255, 0.18)' },
+              { offset: 1, color: 'rgba(22, 119, 255, 0.02)' }
+            ]
+          }
         }
-      },
+        : undefined,
       data: dashboardStore.revenueData
     })
   }
@@ -71,8 +70,8 @@ const chartOption = computed(() => {
   if (dashboardStore.activeMetrics.includes('profit')) {
     series.push({
       name: 'Прибыль, ₽',
-      type: 'line',
-      smooth: true,
+      type: dashboardStore.chartType,
+      smooth: dashboardStore.chartType === 'line',
       yAxisIndex: 0,
       symbol: 'circle',
       symbolSize: 6,
@@ -90,8 +89,8 @@ const chartOption = computed(() => {
   if (dashboardStore.activeMetrics.includes('orders')) {
     series.push({
       name: 'Заказы, шт.',
-      type: 'line',
-      smooth: true,
+      type: dashboardStore.chartType,
+      smooth: dashboardStore.chartType === 'line',
       yAxisIndex: 1,
       symbol: 'circle',
       symbolSize: 6,

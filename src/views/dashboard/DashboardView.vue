@@ -101,19 +101,18 @@
             <section class="chart-card">
                 <div class="section-header">
                     <h2>Динамика показателей</h2>
-                    <el-checkbox-group v-model="dashboardStore.activeMetrics" class="metric-switcher">
-                        <el-checkbox-button label="revenue">
-                            Выручка
-                        </el-checkbox-button>
+                    <div class="chart-controls">
+                        <el-checkbox-group v-model="dashboardStore.activeMetrics" class="metric-switcher">
+                            <el-checkbox-button label="revenue">Выручка</el-checkbox-button>
+                            <el-checkbox-button label="profit">Прибыль</el-checkbox-button>
+                            <el-checkbox-button label="orders">Заказы</el-checkbox-button>
+                        </el-checkbox-group>
 
-                        <el-checkbox-button label="profit">
-                            Прибыль
-                        </el-checkbox-button>
-
-                        <el-checkbox-button label="orders">
-                            Заказы
-                        </el-checkbox-button>
-                    </el-checkbox-group>
+                        <el-select v-model="dashboardStore.chartType" style="width: 160px">
+                            <el-option label="Линия" value="line" />
+                            <el-option label="Столбцы" value="bar" />
+                        </el-select>
+                    </div>
                 </div>
 
                 <DashboardChart />
@@ -153,98 +152,53 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column
-  prop="profit"
-  label="Прибыль, ₽"
-  min-width="150"
-  sortable
-  align="right"
-  header-align="right"
->
-  <template #default="{ row }">
-    <el-input-number
-      v-if="!isReadOnlyTable"
-      v-model="row.profit"
-      size="small"
-      :min="0"
-      controls-position="right"
-    />
+                    <el-table-column prop="profit" label="Прибыль, ₽" min-width="150" sortable align="right"
+                        header-align="right">
+                        <template #default="{ row }">
+                            <el-input-number v-if="!isReadOnlyTable" v-model="row.profit" size="small" :min="0"
+                                controls-position="right" />
 
-    <span v-else class="number-cell">
-      {{ formatMoney(row.profit) }}
-    </span>
-  </template>
-</el-table-column>
+                            <span v-else class="number-cell">
+                                {{ formatMoney(row.profit) }}
+                            </span>
+                        </template>
+                    </el-table-column>
 
-                    <el-table-column
-  prop="orders"
-  label="Заказы, шт."
-  min-width="130"
-  sortable
-  align="right"
-  header-align="right"
->
-  <template #default="{ row }">
-    <el-input-number
-      v-if="!isReadOnlyTable"
-      v-model="row.orders"
-      size="small"
-      :min="0"
-      controls-position="right"
-    />
+                    <el-table-column prop="orders" label="Заказы, шт." min-width="130" sortable align="right"
+                        header-align="right">
+                        <template #default="{ row }">
+                            <el-input-number v-if="!isReadOnlyTable" v-model="row.orders" size="small" :min="0"
+                                controls-position="right" />
 
-    <span v-else class="number-cell">
-      {{ formatNumber(row.orders) }}
-    </span>
-  </template>
-</el-table-column>
+                            <span v-else class="number-cell">
+                                {{ formatNumber(row.orders) }}
+                            </span>
+                        </template>
+                    </el-table-column>
 
-                    <el-table-column
-  prop="averageCheck"
-  label="Средний чек, ₽"
-  min-width="150"
-  sortable
-  align="right"
-  header-align="right"
->
-  <template #default="{ row }">
-    <el-input-number
-      v-if="!isReadOnlyTable"
-      v-model="row.averageCheck"
-      size="small"
-      :min="0"
-      controls-position="right"
-    />
+                    <el-table-column prop="averageCheck" label="Средний чек, ₽" min-width="150" sortable align="right"
+                        header-align="right">
+                        <template #default="{ row }">
+                            <el-input-number v-if="!isReadOnlyTable" v-model="row.averageCheck" size="small" :min="0"
+                                controls-position="right" />
 
-    <span v-else class="number-cell">
-      {{ formatMoney(row.averageCheck) }}
-    </span>
-  </template>
-</el-table-column>
+                            <span v-else class="number-cell">
+                                {{ formatMoney(row.averageCheck) }}
+                            </span>
+                        </template>
+                    </el-table-column>
 
-                    <el-table-column
-  prop="conversion"
-  label="Конверсия, %"
-  min-width="140"
-  sortable
-  align="right"
-  header-align="right"
->
-  <template #default="{ row }">
-    <el-input-number
-      v-if="!isReadOnlyTable"
-      v-model="row.conversion"
-      size="small"
-      :min="0"
-      :step="0.1"
-      controls-position="right"
-    />
+                    <el-table-column prop="conversion" label="Конверсия, %" min-width="140" sortable align="right"
+                        header-align="right">
+                        <template #default="{ row }">
+                            <el-input-number v-if="!isReadOnlyTable" v-model="row.conversion" size="small" :min="0"
+                                :step="0.1" controls-position="right" />
 
-    <span v-else class="number-cell">
-      {{ formatPercent(row.conversion) }}
-    </span>
-  </template>
-</el-table-column>
+                            <span v-else class="number-cell">
+                                {{ formatPercent(row.conversion) }}
+                            </span>
+                        </template>
+                    </el-table-column>
 
                     <el-table-column prop="category" label="Категория" min-width="180">
                         <template #default="{ row }">
@@ -294,49 +248,49 @@ function formatPercent(value: number): string {
 }
 
 function exportToCsv() {
-  const rows = dashboardStore.groupedRows
+    const rows = dashboardStore.groupedRows
 
-  const headers = [
-    'Дата',
-    'Выручка',
-    'Прибыль',
-    'Заказы',
-    'Средний чек',
-    'Конверсия',
-    'Категория',
-    'Регион'
-  ]
+    const headers = [
+        'Дата',
+        'Выручка',
+        'Прибыль',
+        'Заказы',
+        'Средний чек',
+        'Конверсия',
+        'Категория',
+        'Регион'
+    ]
 
-  const csvRows = rows.map((row) => [
-    row.date,
-    row.revenue,
-    row.profit,
-    row.orders,
-    row.averageCheck,
-    row.conversion,
-    row.category,
-    row.region
-  ])
+    const csvRows = rows.map((row) => [
+        row.date,
+        row.revenue,
+        row.profit,
+        row.orders,
+        row.averageCheck,
+        row.conversion,
+        row.category,
+        row.region
+    ])
 
-  const csvContent = [
-    headers,
-    ...csvRows
-  ]
-    .map((row) => row.map((cell) => `"${cell}"`).join(';'))
-    .join('\n')
+    const csvContent = [
+        headers,
+        ...csvRows
+    ]
+        .map((row) => row.map((cell) => `"${cell}"`).join(';'))
+        .join('\n')
 
-  const blob = new Blob(['\uFEFF' + csvContent], {
-    type: 'text/csv;charset=utf-8;'
-  })
+    const blob = new Blob(['\uFEFF' + csvContent], {
+        type: 'text/csv;charset=utf-8;'
+    })
 
-  const url = URL.createObjectURL(blob)
-  const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
 
-  link.href = url
-  link.download = 'dashboard-export.csv'
-  link.click()
+    link.href = url
+    link.download = 'dashboard-export.csv'
+    link.click()
 
-  URL.revokeObjectURL(url)
+    URL.revokeObjectURL(url)
 }
 
 </script>
@@ -635,11 +589,17 @@ function exportToCsv() {
 }
 
 .number-cell {
-  display: block;
-  width: 100%;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  color: #1f2937;
-  font-weight: 600;
+    display: block;
+    width: 100%;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 </style>
