@@ -224,12 +224,43 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
 import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 
 const dashboardStore = useDashboardStore()
+
+onMounted(() => {
+    dashboardStore.loadState()
+})
+
+watch(
+    () => dashboardStore.filters,
+    () => {
+        dashboardStore.saveState()
+    },
+    {
+        deep: true
+    }
+)
+
+watch(
+    () => dashboardStore.activeMetrics,
+    () => {
+        dashboardStore.saveState()
+    },
+    {
+        deep: true
+    }
+)
+
+watch(
+    () => dashboardStore.chartType,
+    () => {
+        dashboardStore.saveState()
+    }
+)
 
 const isReadOnlyTable = computed(() => {
     return dashboardStore.filters.group !== 'day'
@@ -598,8 +629,8 @@ function exportToCsv() {
 }
 
 .chart-controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 </style>
