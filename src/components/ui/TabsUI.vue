@@ -1,5 +1,9 @@
 <template>
-  <div class="ui-tabs" role="tablist">
+  <div
+    class="ui-tabs"
+    :class="[`ui-tabs--${variant}`]"
+    role="tablist"
+  >
     <button
       v-for="tab in tabs"
       :key="tab.value"
@@ -21,10 +25,16 @@ export type TabsUIItem = {
   value: string
 }
 
-defineProps<{
-  modelValue: string
-  tabs: TabsUIItem[]
-}>()
+withDefaults(
+  defineProps<{
+    modelValue: string
+    tabs: TabsUIItem[]
+    variant?: 'default' | 'underline' | 'pills'
+  }>(),
+  {
+    variant: 'default'
+  }
+)
 
 const emit = defineEmits<{
   'update:modelValue': [value: string]

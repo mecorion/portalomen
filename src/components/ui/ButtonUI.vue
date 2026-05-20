@@ -25,7 +25,7 @@
 <script setup lang="ts">
 withDefaults(
   defineProps<{
-    variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'success' | 'warning' | 'info' | 'link' | 'soft'
     size?: 'sm' | 'md' | 'lg'
     type?: 'button' | 'submit' | 'reset'
     block?: boolean
