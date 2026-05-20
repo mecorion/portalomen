@@ -24,6 +24,7 @@
 
     <nav class="sidebar-menu">
       <button class="sidebar-menu__item active">Дашборд</button>
+      <button class="sidebar-menu__item" @click="goShowcase">UI Kit</button>
       <button class="sidebar-menu__item">Отчеты</button>
       <button class="sidebar-menu__item">Продажи</button>
       <button class="sidebar-menu__item">Клиенты</button>
@@ -49,3 +50,9 @@
     </div>
   </aside>
 </template>
+
+<script setup lang="ts">
+function goShowcase() {
+  window.location.hash = '/ui'
+}
+</script>
