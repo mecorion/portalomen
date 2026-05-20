@@ -4,6 +4,8 @@ export type GroupType = 'day' | 'week' | 'month'
 
 export type ChartType = 'line' | 'bar'
 
+export type ChartMetric = 'revenue' | 'profit' | 'orders'
+
 export type DashboardRow = {
   id: number
   date: string
