@@ -9,21 +9,11 @@
 
             <DashboardStats />
 
-            <section class="chart-card">
+            <section class="ds-card ds-card--section">
                 <div class="section-header">
                     <h2>Динамика показателей</h2>
-                    <div class="chart-controls">
-                        <el-checkbox-group v-model="dashboardStore.activeMetrics" class="metric-switcher">
-                            <el-checkbox-button label="revenue">Выручка</el-checkbox-button>
-                            <el-checkbox-button label="profit">Прибыль</el-checkbox-button>
-                            <el-checkbox-button label="orders">Заказы</el-checkbox-button>
-                        </el-checkbox-group>
-
-                        <el-select v-model="dashboardStore.chartType" style="width: 160px">
-                            <el-option label="Линия" value="line" />
-                            <el-option label="Столбцы" value="bar" />
-                        </el-select>
-                    </div>
+                    
+                    <DashboardChartControls />
                 </div>
 
                 <DashboardChart />
@@ -43,6 +33,7 @@ import AppSidebar from '../../components/layout/AppSidebar.vue'
 import AppTopbar from '../../components/layout/AppTopbar.vue'
 import DashboardFilters from '../../components/dashboard/DashboardFilters.vue'
 import DashboardTable from '../../components/dashboard/DashboardTable.vue'
+import DashboardChartControls from '../../components/dashboard/DashboardChartControls.vue'
 
 const dashboardStore = useDashboardStore()
 
@@ -285,10 +276,6 @@ function exportToCsv() {
     color: #ffffff;
     font-weight: 600;
 }
-.chart-card {
-    padding: 20px 22px;
-    margin-bottom: 20px;
-}
 
 .table-card {
     padding: 18px 22px;
@@ -307,16 +294,6 @@ function exportToCsv() {
     font-weight: 700;
 }
 
-.chart-placeholder {
-    height: 290px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
-    border: 1px dashed #d8e4f2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #718096;
-}
 
 .table-placeholder {
     height: 360px;
@@ -385,9 +362,4 @@ function exportToCsv() {
     font-weight: 600;
 }
 
-.chart-controls {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
 </style>
