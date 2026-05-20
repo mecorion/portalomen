@@ -1,55 +1,11 @@
 <template>
-    <div class="dashboard-layout">
+    <div class="app-layout">
         <AppSidebar />
 
-        <main class="content">
+        <main class="app-content">
             <AppTopbar title="Дашборд" @export="exportToCsv" />
 
-            <section class="filters-card">
-                <div class="filter-item">
-                    <label>Период</label>
-                    <el-date-picker v-model="dashboardStore.filters.period" type="daterange" format="DD.MM.YYYY"
-                        value-format="YYYY-MM-DD" start-placeholder="Начало" end-placeholder="Конец" />
-                </div>
-
-                <div class="filter-item">
-                    <label>Группировка</label>
-                    <el-select v-model="dashboardStore.filters.group" placeholder="Группировка">
-                        <el-option label="По дням" value="day" />
-                        <el-option label="По неделям" value="week" />
-                        <el-option label="По месяцам" value="month" />
-                    </el-select>
-                </div>
-
-                <div class="filter-item">
-                    <label>Категория</label>
-                    <el-select v-model="dashboardStore.filters.category">
-                        <el-option label="Все категории" value="all" />
-                        <el-option label="Электроника" value="Электроника" />
-                        <el-option label="Бытовая техника" value="Бытовая техника" />
-                        <el-option label="Дом и сад" value="Дом и сад" />
-                    </el-select>
-                </div>
-
-                <div class="filter-item">
-                    <label>Регион</label>
-                    <el-select v-model="dashboardStore.filters.region">
-                        <el-option label="Все регионы" value="all" />
-                        <el-option label="Алматы" value="Алматы" />
-                        <el-option label="Астана" value="Астана" />
-                    </el-select>
-                </div>
-
-                <div class="filter-item">
-                    <label>Поиск</label>
-                    <el-input v-model="dashboardStore.filters.search" placeholder="Дата, категория, регион" clearable />
-                </div>
-
-                <div class="filter-actions">
-                    <el-button type="primary">Применить</el-button>
-                    <el-button>Сбросить</el-button>
-                </div>
-            </section>
+            <DashboardFilters />
 
             <DashboardStats />
 
@@ -185,6 +141,7 @@ import DashboardChart from '../../components/dashboard/DashboardChart.vue'
 import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 import AppSidebar from '../../components/layout/AppSidebar.vue'
 import AppTopbar from '../../components/layout/AppTopbar.vue'
+import DashboardFilters from '../../components/dashboard/DashboardFilters.vue'
 
 const dashboardStore = useDashboardStore()
 
@@ -284,24 +241,6 @@ function exportToCsv() {
 </script>
 
 <style scoped>
-.dashboard-layout {
-    display: flex;
-    min-height: 100vh;
-    background: #f5f9ff;
-    color: #1f2937;
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-
-.sidebar {
-    width: 248px;
-    min-width: 248px;
-    background: linear-gradient(180deg, #1683ff 0%, #0066e6 100%);
-    color: #ffffff;
-    padding: 22px 16px;
-    display: flex;
-    flex-direction: column;
-}
-
 .logo {
     display: flex;
     align-items: center;
@@ -445,46 +384,6 @@ function exportToCsv() {
     color: #ffffff;
     font-weight: 600;
 }
-
-.filters-card,
-.chart-card,
-.table-card {
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-    border: 1px solid #edf2f7;
-}
-
-.filters-card {
-    display: grid;
-    grid-template-columns: 260px 190px 220px 190px auto;
-    gap: 16px;
-    align-items: end;
-    padding: 18px 22px;
-    margin-bottom: 20px;
-}
-
-.filter-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.filter-item label {
-    font-size: 12px;
-    color: #718096;
-    font-weight: 600;
-}
-
-.filter-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.filters-card {
-    grid-template-columns: 260px 190px 220px 190px 240px auto;
-}
-
 .chart-card {
     padding: 20px 22px;
     margin-bottom: 20px;
