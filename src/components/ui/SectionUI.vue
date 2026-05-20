@@ -1,23 +1,31 @@
 <template>
-  <section class="ds-card ds-card--section">
+  <CardUI
+    section
+    padding
+  >
     <div
       v-if="title || $slots.actions"
-      class="ds-section-header"
+      class="ui-section-header"
     >
       <h2 v-if="title">
         {{ title }}
       </h2>
 
-      <div v-if="$slots.actions">
+      <div
+        v-if="$slots.actions"
+        class="ui-section-actions"
+      >
         <slot name="actions" />
       </div>
     </div>
 
     <slot />
-  </section>
+  </CardUI>
 </template>
 
 <script setup lang="ts">
+import CardUI from './CardUI.vue'
+
 defineProps<{
   title?: string
 }>()

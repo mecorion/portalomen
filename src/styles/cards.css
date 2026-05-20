@@ -1,24 +1,33 @@
-.ds-card {
+.ui-card {
   background: var(--app-white);
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-card);
 }
 
-.ds-card--section {
-  padding: 18px 22px;
+.ui-card--section {
   margin-bottom: 20px;
 }
 
-.ds-section-header {
+.ui-card--padding {
+  padding: 18px 22px;
+}
+
+.ui-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 14px;
 }
 
-.ds-section-header h2 {
+.ui-section-header h2 {
   margin: 0;
   font-size: 17px;
   font-weight: 700;
+}
+
+.ui-section-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
