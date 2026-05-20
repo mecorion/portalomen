@@ -6,130 +6,106 @@
             <AppTopbar title="Дашборд" @export="exportToCsv" />
 
             <DashboardFilters />
-
             <DashboardStats />
-
-            <section class="ds-card ds-card--section">
-                <div class="section-header">
-                    <h2>Динамика показателей</h2>
-                    
-                    <DashboardChartControls />
-                </div>
-
-                <DashboardChart />
-            </section>
-
+            <DashboardChartSection />
             <DashboardTable />
         </main>
     </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, watch } from 'vue'
+import { onMounted, watch } from 'vue'
+
 import { useDashboardStore } from '../../stores/dashboardStore'
-import DashboardChart from '../../components/dashboard/DashboardChart.vue'
-import DashboardStats from '../../components/dashboard/DashboardStats.vue'
+
 import AppSidebar from '../../components/layout/AppSidebar.vue'
 import AppTopbar from '../../components/layout/AppTopbar.vue'
+
 import DashboardFilters from '../../components/dashboard/DashboardFilters.vue'
+import DashboardStats from '../../components/dashboard/DashboardStats.vue'
+import DashboardChartSection from '../../components/dashboard/DashboardChartSection.vue'
 import DashboardTable from '../../components/dashboard/DashboardTable.vue'
-import DashboardChartControls from '../../components/dashboard/DashboardChartControls.vue'
 
 const dashboardStore = useDashboardStore()
 
 onMounted(() => {
-    dashboardStore.loadState()
+  dashboardStore.loadState()
 })
 
 watch(
-    () => dashboardStore.filters,
-    () => {
-        dashboardStore.saveState()
-    },
-    {
-        deep: true
-    }
+  () => dashboardStore.filters,
+  () => {
+    dashboardStore.saveState()
+  },
+  {
+    deep: true
+  }
 )
 
 watch(
-    () => dashboardStore.activeMetrics,
-    () => {
-        dashboardStore.saveState()
-    },
-    {
-        deep: true
-    }
+  () => dashboardStore.activeMetrics,
+  () => {
+    dashboardStore.saveState()
+  },
+  {
+    deep: true
+  }
 )
 
 watch(
-    () => dashboardStore.chartType,
-    () => {
-        dashboardStore.saveState()
-    }
+  () => dashboardStore.chartType,
+  () => {
+    dashboardStore.saveState()
+  }
 )
-
-const isReadOnlyTable = computed(() => {
-    return dashboardStore.filters.group !== 'day'
-})
-
-function formatMoney(value: number): string {
-    return new Intl.NumberFormat('ru-RU').format(value) + ' ₽'
-}
-
-function formatNumber(value: number): string {
-    return new Intl.NumberFormat('ru-RU').format(value)
-}
-
-function formatPercent(value: number): string {
-    return value.toFixed(2) + '%'
-}
 
 function exportToCsv() {
-    const rows = dashboardStore.groupedRows
+  const rows = dashboardStore.groupedRows
 
-    const headers = [
-        'Дата',
-        'Выручка',
-        'Прибыль',
-        'Заказы',
-        'Средний чек',
-        'Конверсия',
-        'Категория',
-        'Регион'
-    ]
+  const headers = [
+    'Дата',
+    'Выручка',
+    'Прибыль',
+    'Заказы',
+    'Средний чек',
+    'Конверсия',
+    'Категория',
+    'Регион'
+  ]
 
-    const csvRows = rows.map((row) => [
-        row.date,
-        row.revenue,
-        row.profit,
-        row.orders,
-        row.averageCheck,
-        row.conversion,
-        row.category,
-        row.region
-    ])
+  const csvRows = rows.map((row) => [
+    row.date,
+    row.revenue,
+    row.profit,
+    row.orders,
+    row.averageCheck,
+    row.conversion,
+    row.category,
+    row.region
+  ])
 
-    const csvContent = [
-        headers,
-        ...csvRows
-    ]
-        .map((row) => row.map((cell) => `"${cell}"`).join(';'))
-        .join('\n')
+  const csvContent = [
+    headers,
+    ...csvRows
+  ]
+    .map((row) => row.map((cell) => `"${cell}"`).join(';'))
+    .join('\n')
 
-    const blob = new Blob(['\uFEFF' + csvContent], {
-        type: 'text/csv;charset=utf-8;'
-    })
+  const blob = new Blob(['\uFEFF' + csvContent], {
+    type: 'text/csv;charset=utf-8;'
+  })
 
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
 
-    link.href = url
-    link.download = 'dashboard-export.csv'
-    link.click()
+  const link = document.createElement('a')
 
-    URL.revokeObjectURL(url)
+  link.href = url
+  link.download = 'dashboard-export.csv'
+
+  link.click()
+
+  URL.revokeObjectURL(url)
 }
-
 </script>
 
 <style scoped>
