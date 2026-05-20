@@ -1,0 +1,145 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--color-text);
+  font-family: var(--font-main);
+}
+
+.app-sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  color: #ffffff;
+  padding: 22px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding: 22px 28px;
+  overflow: auto;
+}
+
+.app-topbar {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.app-topbar h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.app-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 12px;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 28px;
+}
+
+.sidebar-logo__icon {
+  flex: 0 0 auto;
+  stroke: currentColor;
+}
+
+.sidebar-logo span {
+  line-height: 1;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-menu__item {
+  height: 46px;
+  border: none;
+  border-radius: 10px;
+  padding: 0 16px;
+  text-align: left;
+  background: transparent;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sidebar-menu__item:hover,
+.sidebar-menu__item.active {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.sidebar-support {
+  margin-top: auto;
+  margin-bottom: 18px;
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.sidebar-support__title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.sidebar-support__text {
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 14px;
+}
+
+.sidebar-support__button {
+  width: 100%;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.18);
+  cursor: pointer;
+}
+
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+}
+
+.sidebar-profile__avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sidebar-profile__name {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.sidebar-profile__role {
+  font-size: 12px;
+  opacity: 0.85;
+}

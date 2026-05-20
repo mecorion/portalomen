@@ -1,0 +1,55 @@
+.ds-table {
+  width: 100%;
+  font-size: 13px;
+}
+
+.ds-table .el-table__cell {
+  padding: 5px 0;
+}
+
+.ds-table .cell {
+  padding: 0 8px;
+}
+
+.ds-table .el-input__wrapper,
+.ds-table .el-select__wrapper {
+  min-height: 30px;
+  border-radius: 7px;
+  box-shadow: 0 0 0 1px var(--color-border-strong) inset;
+}
+
+.ds-table .el-input-number {
+  width: 100%;
+}
+
+.ds-table .el-input-number .el-input__wrapper {
+  width: 100%;
+}
+
+.ds-table .el-input-number__increase,
+.ds-table .el-input-number__decrease {
+  width: 22px;
+}
+
+.ds-table .el-table__header th {
+  background: #f8fbff;
+  color: #5f6f89;
+  font-weight: 700;
+}
+
+.ds-table .el-table__row:hover > td {
+  background: #f5f9ff;
+}
+
+.ds-number-cell {
+  display: block;
+  width: 100%;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.ds-table-alert {
+  margin-bottom: 14px;
+}

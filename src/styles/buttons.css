@@ -1,0 +1,20 @@
+.ds-icon-button,
+.ds-export-button {
+  height: 36px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+.ds-icon-button {
+  width: 36px;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+}
+
+.ds-export-button {
+  padding: 0 18px;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-weight: 600;
+}

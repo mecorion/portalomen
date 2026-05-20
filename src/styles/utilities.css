@@ -1,0 +1,19 @@
+.w-full {
+  width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-soft {
+  color: var(--color-soft);
+}
