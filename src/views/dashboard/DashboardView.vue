@@ -3,7 +3,7 @@
         <AppSidebar />
 
         <main class="app-content">
-            <AppTopbar title="Дашборд" @export="exportToCsv" />
+            <AppTopbar title="Дашборд" @export="handleExport" />
 
             <DashboardFilters />
             <DashboardStats />
@@ -26,7 +26,11 @@ import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 import DashboardChartSection from '../../components/dashboard/DashboardChartSection.vue'
 import DashboardTable from '../../components/dashboard/DashboardTable.vue'
 
+import { useCsvExport } from '../../composables/useCsvExport'
+
 const dashboardStore = useDashboardStore()
+
+const { exportToCsv } = useCsvExport()
 
 onMounted(() => {
   dashboardStore.loadState()
@@ -59,9 +63,7 @@ watch(
   }
 )
 
-function exportToCsv() {
-  const rows = dashboardStore.groupedRows
-
+function handleExport() {
   const headers = [
     'Дата',
     'Выручка',
@@ -73,7 +75,7 @@ function exportToCsv() {
     'Регион'
   ]
 
-  const csvRows = rows.map((row) => [
+  const rows = dashboardStore.groupedRows.map((row) => [
     row.date,
     row.revenue,
     row.profit,
@@ -84,27 +86,7 @@ function exportToCsv() {
     row.region
   ])
 
-  const csvContent = [
-    headers,
-    ...csvRows
-  ]
-    .map((row) => row.map((cell) => `"${cell}"`).join(';'))
-    .join('\n')
-
-  const blob = new Blob(['\uFEFF' + csvContent], {
-    type: 'text/csv;charset=utf-8;'
-  })
-
-  const url = URL.createObjectURL(blob)
-
-  const link = document.createElement('a')
-
-  link.href = url
-  link.download = 'dashboard-export.csv'
-
-  link.click()
-
-  URL.revokeObjectURL(url)
+  exportToCsv('dashboard-export.csv', headers, rows)
 }
 </script>
 
