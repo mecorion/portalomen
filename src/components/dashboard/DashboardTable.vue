@@ -1,12 +1,11 @@
 <template>
-    <section class="ds-card ds-card--section">
-        <div class="ds-section-header">
-            <h2>Данные за период</h2>
 
+    <SectionUI class="ds-card ds-card--section">
+        <template #actions>
             <el-button type="primary" @click="dashboardStore.addRow" :disabled="isReadOnlyTable">
                 Добавить запись
             </el-button>
-        </div>
+        </template>
 
         <el-alert v-if="isReadOnlyTable" title="Редактирование недоступно для агрегированных данных" type="info"
             :closable="false" class="ds-table-alert" />
@@ -99,11 +98,12 @@
                 </template>
             </el-table-column>
         </el-table>
-    </section>
+    </SectionUI>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import SectionUI from '../ui/SectionUI.vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
 
 const dashboardStore = useDashboardStore()
