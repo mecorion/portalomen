@@ -1,6 +1,12 @@
 <template>
-    <div class="app-layout">
-        <AppSidebar />
+    <div
+        class="app-layout"
+        :class="{ 'app-layout--sidebar-collapsed': sidebarCollapsed }"
+    >
+        <AppSidebar
+            :collapsed="sidebarCollapsed"
+            @toggle="sidebarCollapsed = !sidebarCollapsed"
+        />
 
         <main class="app-content">
             <AppTopbar title="Дашборд" @export="handleExport" />
@@ -14,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { useDashboardStore } from '../../stores/dashboardStore'
 
@@ -31,6 +37,8 @@ import { useCsvExport } from '../../composables/useCsvExport'
 const dashboardStore = useDashboardStore()
 
 const { exportToCsv } = useCsvExport()
+
+const sidebarCollapsed = ref(false)
 
 onMounted(() => {
   dashboardStore.loadState()
