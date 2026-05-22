@@ -226,6 +226,7 @@
 
 .app-sidebar--collapsed .sidebar-menu__item {
   justify-content: center;
+  gap: 0;
   padding: 0;
 }
 
@@ -274,6 +275,7 @@
 
   .app-sidebar--collapsed .sidebar-menu__item {
     justify-content: flex-start;
+    gap: 12px;
     padding: 0 14px;
   }
 
