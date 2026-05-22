@@ -1,7 +1,10 @@
 <template>
   <aside
     class="app-sidebar"
-    :class="{ 'app-sidebar--collapsed': collapsed }"
+    :class="{
+      'app-sidebar--collapsed': collapsed,
+      'app-sidebar--mobile-open': mobileOpen
+    }"
   >
     <div class="sidebar-logo">
       <div class="sidebar-logo__brand">
@@ -102,10 +105,12 @@
 <script setup lang="ts">
 defineProps<{
   collapsed?: boolean
+  mobileOpen?: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   toggle: []
+  close: []
 }>()
 
 const menuItems = [
@@ -122,5 +127,6 @@ const menuItems = [
 
 function goShowcase() {
   window.location.hash = '/ui'
+  emit('close')
 }
 </script>

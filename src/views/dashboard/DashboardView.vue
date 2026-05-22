@@ -1,11 +1,35 @@
 <template>
     <div
         class="app-layout"
-        :class="{ 'app-layout--sidebar-collapsed': sidebarCollapsed }"
+        :class="{
+            'app-layout--sidebar-collapsed': sidebarCollapsed,
+            'app-layout--sidebar-mobile-open': mobileSidebarOpen
+        }"
     >
+        <button
+            class="mobile-sidebar-toggle"
+            type="button"
+            aria-label="Открыть меню"
+            @click="mobileSidebarOpen = true"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <button
+            v-if="mobileSidebarOpen"
+            class="mobile-sidebar-backdrop"
+            type="button"
+            aria-label="Закрыть меню"
+            @click="mobileSidebarOpen = false"
+        ></button>
+
         <AppSidebar
             :collapsed="sidebarCollapsed"
-            @toggle="sidebarCollapsed = !sidebarCollapsed"
+            :mobile-open="mobileSidebarOpen"
+            @close="mobileSidebarOpen = false"
+            @toggle="handleSidebarToggle"
         />
 
         <main class="app-content">
@@ -39,6 +63,7 @@ const dashboardStore = useDashboardStore()
 const { exportToCsv } = useCsvExport()
 
 const sidebarCollapsed = ref(false)
+const mobileSidebarOpen = ref(false)
 
 onMounted(() => {
   dashboardStore.loadState()
@@ -95,6 +120,15 @@ function handleExport() {
   ])
 
   exportToCsv('dashboard-export.csv', headers, rows)
+}
+
+function handleSidebarToggle() {
+  if (window.matchMedia('(max-width: 760px)').matches) {
+    mobileSidebarOpen.value = !mobileSidebarOpen.value
+    return
+  }
+
+  sidebarCollapsed.value = !sidebarCollapsed.value
 }
 </script>
 
