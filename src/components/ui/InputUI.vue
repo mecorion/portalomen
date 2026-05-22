@@ -1,19 +1,19 @@
 <template>
   <label class="ui-field">
     <span v-if="label" class="ui-field__label">{{ label }}</span>
-    <span class="ui-input">
-      <span v-if="$slots.prefix" class="ui-input__prefix">
+    <el-input
+      class="ui-el-input"
+      :model-value="modelValue"
+      :type="type"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      clearable
+      @update:model-value="emit('update:modelValue', String($event))"
+    >
+      <template v-if="$slots.prefix" #prefix>
         <slot name="prefix" />
-      </span>
-      <input
-        :value="modelValue"
-        class="ui-input__control"
-        :type="type"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-      />
-    </span>
+      </template>
+    </el-input>
     <span v-if="hint" class="ui-field__hint">{{ hint }}</span>
   </label>
 </template>

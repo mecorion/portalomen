@@ -1,21 +1,21 @@
 <template>
   <label class="ui-field">
     <span v-if="label" class="ui-field__label">{{ label }}</span>
-    <span class="ui-input">
-      <span v-if="prefix" class="ui-input__prefix">{{ prefix }}</span>
-      <input
-        :value="modelValue"
-        class="ui-input__control"
-        type="number"
+    <div class="ui-number-field">
+      <span v-if="prefix" class="ui-number-field__addon">{{ prefix }}</span>
+      <el-input-number
+        class="ui-el-number"
+        :model-value="modelValue"
         :min="min"
         :max="max"
         :step="step"
         :placeholder="placeholder"
         :disabled="disabled"
-        @input="emitValue(($event.target as HTMLInputElement).value)"
+        controls-position="right"
+        @update:model-value="emit('update:modelValue', $event)"
       />
-      <span v-if="suffix" class="ui-input__suffix">{{ suffix }}</span>
-    </span>
+      <span v-if="suffix" class="ui-number-field__addon">{{ suffix }}</span>
+    </div>
     <span v-if="hint" class="ui-field__hint">{{ hint }}</span>
   </label>
 </template>
@@ -44,8 +44,4 @@ withDefaults(
 const emit = defineEmits<{
   'update:modelValue': [value: number | null]
 }>()
-
-function emitValue(value: string) {
-  emit('update:modelValue', value === '' ? null : Number(value))
-}
 </script>

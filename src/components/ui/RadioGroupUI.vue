@@ -1,32 +1,27 @@
 <template>
-  <div
+  <el-radio-group
     class="ui-radio-group"
     :class="{ 'ui-radio-group--horizontal': horizontal }"
+    :model-value="modelValue"
+    :name="name"
+    @update:model-value="emit('update:modelValue', String($event))"
   >
-    <label
+    <el-radio
       v-for="option in options"
       :key="option.value"
       class="ui-radio"
       :class="{ 'ui-radio--card': card, 'ui-radio--selected': option.value === modelValue }"
+      :value="option.value"
+      :disabled="option.disabled"
     >
-      <input
-        class="ui-radio__input"
-        type="radio"
-        :name="name"
-        :value="option.value"
-        :checked="option.value === modelValue"
-        :disabled="option.disabled"
-        @change="emit('update:modelValue', option.value)"
-      />
-      <span class="ui-radio__dot" />
       <span class="ui-radio__body">
         <span class="ui-radio__label">{{ option.label }}</span>
         <span v-if="option.description" class="ui-radio__description">
           {{ option.description }}
         </span>
       </span>
-    </label>
-  </div>
+    </el-radio>
+  </el-radio-group>
 </template>
 
 <script setup lang="ts">

@@ -1,13 +1,14 @@
 <template>
   <label class="ui-field">
     <span v-if="label" class="ui-field__label">{{ label }}</span>
-    <textarea
-      class="ui-textarea"
-      :value="modelValue"
+    <el-input
+      class="ui-el-input ui-el-textarea"
+      :model-value="modelValue"
+      type="textarea"
       :rows="rows"
       :placeholder="placeholder"
       :disabled="disabled"
-      @input="emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+      @update:model-value="emit('update:modelValue', String($event))"
     />
     <span v-if="hint" class="ui-field__hint">{{ hint }}</span>
   </label>
