@@ -79,6 +79,79 @@
         </div>
       </SectionUI>
 
+      <SectionUI title="Filters and typed fields">
+        <div class="ui-showcase__stack">
+          <FilterBarUI>
+            <SearchInputUI
+              v-model="filterSearch"
+              label="Search"
+              placeholder="Search by user, order, ticket"
+            />
+
+            <SelectUI
+              v-model="filterStatus"
+              label="Status"
+              :options="statusOptions"
+            />
+
+            <NumberInputUI
+              v-model="minRevenue"
+              label="Min revenue"
+              prefix="$"
+              :step="1000"
+            />
+
+            <DateRangeUI
+              v-model="dateRange"
+              label="Period"
+            />
+
+            <template #actions>
+              <ButtonUI variant="ghost">Reset</ButtonUI>
+              <ButtonUI variant="primary">Apply</ButtonUI>
+            </template>
+          </FilterBarUI>
+
+          <div class="ui-showcase__grid">
+            <InputUI
+              v-model="email"
+              type="email"
+              label="Email"
+              placeholder="user@company.com"
+              hint="Native email field"
+            />
+
+            <PasswordInputUI
+              v-model="password"
+              label="Password"
+              placeholder="Enter password"
+              hint="Toggleable password field"
+            />
+
+            <NumberInputUI
+              v-model="quantity"
+              label="Quantity"
+              suffix="items"
+              :min="0"
+            />
+
+            <InputUI
+              v-model="phone"
+              type="tel"
+              label="Phone"
+              placeholder="+1 555 000 0000"
+            />
+          </div>
+
+          <div class="ui-showcase__row">
+            <FilterChipUI label="Status" value="Active" />
+            <FilterChipUI label="Region" value="Europe" />
+            <FilterChipUI label="Revenue" value=">= $25k" />
+            <FilterChipUI label="Period" value="May 2026" />
+          </div>
+        </div>
+      </SectionUI>
+
       <SectionUI title="Status and navigation">
         <div class="ui-showcase__stack">
           <div class="ui-showcase__row">
@@ -202,12 +275,18 @@ import BadgeUI from '../../components/ui/BadgeUI.vue'
 import ButtonUI from '../../components/ui/ButtonUI.vue'
 import CardUI from '../../components/ui/CardUI.vue'
 import CheckboxUI from '../../components/ui/CheckboxUI.vue'
+import DateRangeUI from '../../components/ui/DateRangeUI.vue'
 import DropdownUI, { type DropdownUIItem } from '../../components/ui/DropdownUI.vue'
+import FilterBarUI from '../../components/ui/FilterBarUI.vue'
+import FilterChipUI from '../../components/ui/FilterChipUI.vue'
 import InputUI from '../../components/ui/InputUI.vue'
 import ModalUI from '../../components/ui/ModalUI.vue'
+import NumberInputUI from '../../components/ui/NumberInputUI.vue'
 import PaginationUI from '../../components/ui/PaginationUI.vue'
+import PasswordInputUI from '../../components/ui/PasswordInputUI.vue'
 import ProgressUI from '../../components/ui/ProgressUI.vue'
 import RadioGroupUI, { type RadioUIOption } from '../../components/ui/RadioGroupUI.vue'
+import SearchInputUI from '../../components/ui/SearchInputUI.vue'
 import SectionUI from '../../components/ui/SectionUI.vue'
 import SelectUI, { type SelectUIOption } from '../../components/ui/SelectUI.vue'
 import SkeletonUI from '../../components/ui/SkeletonUI.vue'
@@ -218,6 +297,14 @@ import TypographyUI from '../../components/ui/TypographyUI.vue'
 
 const search = ref('')
 const note = ref('')
+const filterSearch = ref('enterprise')
+const filterStatus = ref('active')
+const minRevenue = ref<number | null>(25000)
+const dateRange = ref<[string, string]>(['2026-05-01', '2026-05-22'])
+const email = ref('admin@portalomen.dev')
+const password = ref('portalomen')
+const quantity = ref<number | null>(12)
+const phone = ref('')
 const workspace = ref('dashboard')
 const activeTab = ref('overview')
 const syncEnabled = ref(true)
@@ -230,6 +317,13 @@ const workspaceOptions: SelectUIOption[] = [
   { label: 'Enterprise dashboard', value: 'dashboard' },
   { label: 'CRM workspace', value: 'crm' },
   { label: 'Analytics suite', value: 'analytics' }
+]
+
+const statusOptions: SelectUIOption[] = [
+  { label: 'All statuses', value: 'all' },
+  { label: 'Active', value: 'active' },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Blocked', value: 'blocked' }
 ]
 
 const tabs: TabsUIItem[] = [
