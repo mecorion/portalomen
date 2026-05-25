@@ -5,6 +5,10 @@
   align-items: end;
 }
 
+.dashboard-filter-bar .ui-filter-bar__controls {
+  grid-template-columns: 260px 170px 210px 170px minmax(220px, 1fr);
+}
+
 .ds-filter-item {
   display: flex;
   flex-direction: column;
@@ -28,7 +32,39 @@
   gap: 12px;
 }
 
+.ds-metric-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ds-chart-type-select {
+  width: 160px;
+}
+
 .ds-metric-switcher .el-checkbox-button__inner {
   padding: 8px 14px;
   font-size: 13px;
+}
+
+@media (max-width: 1200px) {
+  .dashboard-filter-bar .ui-filter-bar__controls {
+    grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-filter-bar .ui-filter-bar__controls {
+    grid-template-columns: 1fr;
+  }
+
+  .ds-chart-controls,
+  .ds-metric-buttons {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ds-chart-type-select {
+    width: 100%;
+  }
 }

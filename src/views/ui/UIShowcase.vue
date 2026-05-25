@@ -267,6 +267,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 import AccordionUI, { type AccordionUIItem } from '../../components/ui/AccordionUI.vue'
 import AlertUI from '../../components/ui/AlertUI.vue'
@@ -296,6 +297,7 @@ import TooltipUI from '../../components/ui/TooltipUI.vue'
 import TypographyUI from '../../components/ui/TypographyUI.vue'
 
 const search = ref('')
+const router = useRouter()
 const note = ref('')
 const filterSearch = ref('enterprise')
 const filterStatus = ref('active')
@@ -365,6 +367,6 @@ const accordionItems: AccordionUIItem[] = [
 ]
 
 function goDashboard() {
-  window.location.hash = '/'
+  router.push('/')
 }
 </script>
