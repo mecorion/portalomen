@@ -1,75 +1,97 @@
 <template>
-  <section class="ds-card ds-card--section ds-filters-grid">
-    <div class="ds-filter-item">
-      <label>Период</label>
-
-      <el-date-picker
-        v-model="dashboardStore.filters.period"
-        type="daterange"
-        format="DD.MM.YYYY"
-        value-format="YYYY-MM-DD"
-        start-placeholder="Начало"
-        end-placeholder="Конец"
+  <SectionUI title="Фильтры">
+    <FilterBarUI class="dashboard-filter-bar">
+      <DateRangeUI
+        v-model="periodProxy"
+        label="Период"
       />
-    </div>
 
-    <div class="ds-filter-item">
-      <label>Группировка</label>
+      <SelectUI
+        v-model="groupProxy"
+        label="Группировка"
+        :options="groupOptions"
+      />
 
-      <el-select v-model="dashboardStore.filters.group">
-        <el-option label="По дням" value="day" />
-        <el-option label="По неделям" value="week" />
-        <el-option label="По месяцам" value="month" />
-      </el-select>
-    </div>
+      <SelectUI
+        v-model="dashboardStore.filters.category"
+        label="Категория"
+        :options="categoryOptions"
+      />
 
-    <div class="ds-filter-item">
-      <label>Категория</label>
+      <SelectUI
+        v-model="dashboardStore.filters.region"
+        label="Регион"
+        :options="regionOptions"
+      />
 
-      <el-select v-model="dashboardStore.filters.category">
-        <el-option label="Все категории" value="all" />
-        <el-option label="Электроника" value="Электроника" />
-        <el-option label="Бытовая техника" value="Бытовая техника" />
-        <el-option label="Дом и сад" value="Дом и сад" />
-      </el-select>
-    </div>
-
-    <div class="ds-filter-item">
-      <label>Регион</label>
-
-      <el-select v-model="dashboardStore.filters.region">
-        <el-option label="Все регионы" value="all" />
-        <el-option label="Алматы" value="Алматы" />
-        <el-option label="Астана" value="Астана" />
-      </el-select>
-    </div>
-
-    <div class="ds-filter-item">
-      <label>Поиск</label>
-
-      <el-input
+      <SearchInputUI
         v-model="dashboardStore.filters.search"
+        label="Поиск"
         placeholder="Дата, категория, регион"
-        clearable
       />
-    </div>
 
-    <div class="ds-filter-actions">
-      <el-button type="primary">
-        Применить
-      </el-button>
+      <template #actions>
+        <ButtonUI variant="ghost" @click="resetFilters">
+          Сбросить
+        </ButtonUI>
 
-      <el-button @click="resetFilters">
-        Сбросить
-      </el-button>
-    </div>
-  </section>
+        <ButtonUI variant="primary">
+          Применить
+        </ButtonUI>
+      </template>
+    </FilterBarUI>
+  </SectionUI>
 </template>
 
 <script setup lang="ts">
-import { useDashboardStore } from '../../stores/dashboardStore'
+import { computed } from 'vue'
+
+import { useDashboardStore, type GroupType } from '../../stores/dashboardStore'
+import ButtonUI from '../ui/ButtonUI.vue'
+import DateRangeUI from '../ui/DateRangeUI.vue'
+import FilterBarUI from '../ui/FilterBarUI.vue'
+import SearchInputUI from '../ui/SearchInputUI.vue'
+import SectionUI from '../ui/SectionUI.vue'
+import SelectUI, { type SelectUIOption } from '../ui/SelectUI.vue'
 
 const dashboardStore = useDashboardStore()
+
+const periodProxy = computed<[string, string]>({
+  get() {
+    return dashboardStore.filters.period ?? ['', '']
+  },
+  set(value) {
+    dashboardStore.filters.period = value
+  }
+})
+
+const groupProxy = computed<string>({
+  get() {
+    return dashboardStore.filters.group
+  },
+  set(value) {
+    dashboardStore.filters.group = value as GroupType
+  }
+})
+
+const groupOptions: SelectUIOption[] = [
+  { label: 'По дням', value: 'day' },
+  { label: 'По неделям', value: 'week' },
+  { label: 'По месяцам', value: 'month' }
+]
+
+const categoryOptions: SelectUIOption[] = [
+  { label: 'Все категории', value: 'all' },
+  { label: 'Электроника', value: 'Электроника' },
+  { label: 'Бытовая техника', value: 'Бытовая техника' },
+  { label: 'Дом и сад', value: 'Дом и сад' }
+]
+
+const regionOptions: SelectUIOption[] = [
+  { label: 'Все регионы', value: 'all' },
+  { label: 'Алматы', value: 'Алматы' },
+  { label: 'Астана', value: 'Астана' }
+]
 
 function resetFilters() {
   dashboardStore.filters = {

@@ -1,14 +1,20 @@
 <template>
 
-    <SectionUI class="ds-card ds-card--section">
+    <SectionUI title="Данные продаж">
         <template #actions>
-            <el-button type="primary" @click="dashboardStore.addRow" :disabled="isReadOnlyTable">
+            <ButtonUI variant="primary" @click="dashboardStore.addRow" :disabled="isReadOnlyTable">
                 Добавить запись
-            </el-button>
+            </ButtonUI>
         </template>
 
-        <el-alert v-if="isReadOnlyTable" title="Редактирование недоступно для агрегированных данных" type="info"
-            :closable="false" class="ds-table-alert" />
+        <AlertUI
+            v-if="isReadOnlyTable"
+            class="ds-table-alert"
+            title="Редактирование недоступно"
+            description="Для недельной и месячной группировки таблица показывает агрегированные данные."
+            variant="info"
+            icon="i"
+        />
 
         <el-table :data="dashboardStore.groupedRows" class="ds-table" height="520" border
             :default-sort="{ prop: 'date', order: 'ascending' }">
@@ -92,9 +98,9 @@
 
             <el-table-column label="Действия" width="110" fixed="right">
                 <template #default="{ row }">
-                    <el-button text size="small" type="danger" @click="dashboardStore.deleteRow(row.id)">
+                    <ButtonUI variant="danger" size="sm" @click="dashboardStore.deleteRow(row.id)">
                         Удалить
-                    </el-button>
+                    </ButtonUI>
                 </template>
             </el-table-column>
         </el-table>
@@ -103,6 +109,8 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import AlertUI from '../ui/AlertUI.vue'
+import ButtonUI from '../ui/ButtonUI.vue'
 import SectionUI from '../ui/SectionUI.vue'
 import { useDashboardStore } from '../../stores/dashboardStore'
 
