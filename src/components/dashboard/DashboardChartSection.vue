@@ -1,15 +1,15 @@
 <template>
-  <DsSection title="Динамика показателей">
+  <SectionUI title="Динамика показателей">
     <template #actions>
       <DashboardChartControls />
     </template>
 
     <DashboardChart />
-  </DsSection>
+  </SectionUI>
 </template>
 
 <script setup lang="ts">
-import DsSection from '../ui/SectionUI.vue'
+import SectionUI from '../ui/SectionUI.vue'
 import DashboardChart from './DashboardChart.vue'
 import DashboardChartControls from './DashboardChartControls.vue'
 </script>
