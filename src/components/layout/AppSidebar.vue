@@ -59,7 +59,7 @@
         v-for="item in menuItems"
         :key="item.label"
         class="sidebar-menu__item"
-        :class="{ active: item.active }"
+        :class="{ active: item.path === currentPath }"
         :title="collapsed ? item.label : undefined"
         @click="item.action?.()"
       >
@@ -103,6 +103,9 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
 defineProps<{
   collapsed?: boolean
   mobileOpen?: boolean
@@ -113,10 +116,16 @@ const emit = defineEmits<{
   close: []
 }>()
 
+const route = useRoute()
+const router = useRouter()
+
+const currentPath = computed(() => route.path)
+
 const menuItems = [
-  { label: 'Дашборд', active: true, icon: 'M4 13h6V4H4v9ZM14 20h6V4h-6v16ZM4 20h6v-3H4v3Z' },
-  { label: 'UI Kit', icon: 'M12 3L4 7l8 4 8-4-8-4ZM4 12l8 4 8-4M4 17l8 4 8-4', action: goShowcase },
-  { label: 'Отчеты', icon: 'M5 4h14v16H5V4ZM8 8h8M8 12h8M8 16h5' },
+  { label: 'Дашборд', path: '/', icon: 'M4 13h6V4H4v9ZM14 20h6V4h-6v16ZM4 20h6v-3H4v3Z', action: goDashboard },
+  { label: 'Пуаро', path: '/poirot', icon: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 10l8 8M18 16l3-3M4 21h8M6 17h4' , action: goPoirot },
+  { label: 'Мантика', path: '/mantica', icon: 'M4 18V6M8 18V9M12 18V4M16 18v-7M20 18V8M3 20h18', action: goMantica },
+  { label: 'UI Kit', path: '/ui', icon: 'M12 3L4 7l8 4 8-4-8-4ZM4 12l8 4 8-4M4 17l8 4 8-4', action: goShowcase },
   { label: 'Продажи', icon: 'M4 19h16M7 16V9M12 16V5M17 16v-4' },
   { label: 'Клиенты', icon: 'M16 11a4 4 0 1 0-8 0M4 20a8 8 0 0 1 16 0' },
   { label: 'Товары', icon: 'M6 7h12l-1 13H7L6 7ZM9 7a3 3 0 0 1 6 0' },
@@ -125,8 +134,23 @@ const menuItems = [
   { label: 'Настройки', icon: 'M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5ZM19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 3a7 7 0 0 0-1.7 1L5.1 6l-2 3.5 2 1.5A7 7 0 0 0 5 12c0 .3 0 .7.1 1l-2 1.5 2 3.5 2.4-1a7 7 0 0 0 1.7 1l.3 3h5l.3-3a7 7 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5c.1-.3.1-.7.1-1Z' }
 ]
 
+function goDashboard() {
+  router.push('/')
+  emit('close')
+}
+
+function goPoirot() {
+  router.push('/poirot')
+  emit('close')
+}
+
+function goMantica() {
+  router.push('/mantica')
+  emit('close')
+}
+
 function goShowcase() {
-  window.location.hash = '/ui'
+  router.push('/ui')
   emit('close')
 }
 </script>
