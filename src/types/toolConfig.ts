@@ -95,9 +95,13 @@ export type ToolTableColumnConfig = {
   prop: string
   label: string
   width?: number
+  minWidth?: number
   fixed?: boolean
+  sortable?: boolean
   align?: 'left' | 'center' | 'right'
+  headerAlign?: 'left' | 'center' | 'right'
   format?: 'number' | 'money' | 'percent'
+  showOverflowTooltip?: boolean
 }
 
 export type ToolInfoPanelComponentConfig = {

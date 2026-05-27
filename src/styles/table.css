@@ -53,3 +53,30 @@
 .ds-table-alert {
   margin-bottom: 14px;
 }
+
+.ui-data-table {
+  width: 100%;
+  font-size: 13px;
+}
+
+.ui-data-table .el-table__cell {
+  padding: 5px 0;
+}
+
+.ui-data-table .cell {
+  padding: 0 8px;
+}
+
+.ui-data-table .el-table__header th {
+  background: #f8fbff;
+  color: #5f6f89;
+  font-weight: 700;
+}
+
+.ui-data-table .el-table__row:hover > td {
+  background: #f5f9ff;
+}
+
+.ui-data-table--comfortable .el-table__cell {
+  padding: 8px 0;
+}

@@ -75,24 +75,11 @@
         </div>
       </div>
 
-      <el-table :data="rows" class="tool-table" :height="component.height ?? 430" border>
-        <el-table-column
-          v-for="column in component.columns"
-          :key="column.prop"
-          :prop="column.prop"
-          :label="column.label"
-          :width="column.width"
-          :fixed="column.fixed"
-          :align="column.align"
-          :header-align="column.align"
-        >
-          <template #default="{ row }">
-            <span :class="{ 'ds-number-cell': column.align === 'right' }">
-              {{ formatValue(row[column.prop], column.format) }}
-            </span>
-          </template>
-        </el-table-column>
-      </el-table>
+      <DataTableUI
+        :data="rows"
+        :columns="component.columns"
+        :height="component.height ?? 430"
+      />
     </template>
 
     <template v-else-if="component.type === 'info-panel'">
@@ -119,6 +106,7 @@
 import { computed } from 'vue'
 
 import Chart from '../Chart/Chart.vue'
+import DataTableUI from '../ui/DataTableUI.vue'
 import DateRangeUI from '../ui/DateRangeUI.vue'
 import SearchInputUI from '../ui/SearchInputUI.vue'
 import SelectUI from '../ui/SelectUI.vue'
@@ -127,8 +115,7 @@ import type {
   ToolComponentConfig,
   ToolDataSource,
   ToolDataRow,
-  ToolInfoMetricConfig,
-  ToolTableColumnConfig
+  ToolInfoMetricConfig
 } from '../../types/toolConfig'
 
 const props = defineProps<{
@@ -251,7 +238,7 @@ function formatStateValue(key: string, value: unknown): string {
   return String(value ?? '-')
 }
 
-function formatValue(value: unknown, format?: ToolTableColumnConfig['format'] | ToolInfoMetricConfig['format']): string {
+function formatValue(value: unknown, format?: ToolInfoMetricConfig['format']): string {
   if (value === undefined || value === null || value === '') {
     return '-'
   }
