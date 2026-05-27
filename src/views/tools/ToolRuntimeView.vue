@@ -1,67 +1,32 @@
 <template>
-  <div
-    class="app-layout"
-    :class="{
-      'app-layout--sidebar-collapsed': sidebarCollapsed,
-      'app-layout--sidebar-mobile-open': mobileSidebarOpen
-    }"
+  <AppShellLayout
+    :title="toolConfig?.title ?? 'Инструмент'"
+    content-class="tool-runtime-page"
+    @export="handleExport"
   >
-    <button
-      class="mobile-sidebar-toggle"
-      type="button"
-      aria-label="Открыть меню"
-      @click="mobileSidebarOpen = true"
-    >
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div v-if="loading" class="tool-runtime-status ui-card">Загрузка инструмента</div>
+    <div v-else-if="!toolConfig" class="tool-runtime-status ui-card">Инструмент не найден</div>
 
-    <button
-      v-if="mobileSidebarOpen"
-      class="mobile-sidebar-backdrop"
-      type="button"
-      aria-label="Закрыть меню"
-      @click="mobileSidebarOpen = false"
-    ></button>
-
-    <AppSidebar
-      :collapsed="sidebarCollapsed"
-      :mobile-open="mobileSidebarOpen"
-      @close="mobileSidebarOpen = false"
-      @toggle="handleSidebarToggle"
+    <ToolLayoutRenderer
+      v-else
+      :config="toolConfig"
+      :state="toolState"
+      @state-change="setToolState"
     />
-
-    <main class="app-content tool-runtime-page">
-      <AppTopbar :title="toolConfig?.title ?? 'Инструмент'" @export="handleExport" />
-
-      <div v-if="loading" class="tool-runtime-status ui-card">Загрузка инструмента</div>
-      <div v-else-if="!toolConfig" class="tool-runtime-status ui-card">Инструмент не найден</div>
-
-      <ToolLayoutRenderer
-        v-else
-        :config="toolConfig"
-        :state="toolState"
-        @state-change="setToolState"
-      />
-    </main>
-  </div>
+  </AppShellLayout>
 </template>
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
-import AppSidebar from '../../components/layout/AppSidebar.vue'
-import AppTopbar from '../../components/layout/AppTopbar.vue'
+import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 import ToolLayoutRenderer from '../../components/tools/ToolLayoutRenderer.vue'
 import { fetchToolConfig } from '../../services/toolRegistry'
 import type { ToolConfig } from '../../types/toolConfig'
 
 const route = useRoute()
 
-const sidebarCollapsed = ref(false)
-const mobileSidebarOpen = ref(false)
 const loading = ref(false)
 const toolConfig = ref<ToolConfig>()
 const toolState = reactive<Record<string, unknown>>({})
@@ -134,14 +99,5 @@ function setToolState(key: string, value: unknown) {
 
 function handleExport() {
   // Export will be routed through config-driven data sources later.
-}
-
-function handleSidebarToggle() {
-  if (window.matchMedia('(max-width: 760px)').matches) {
-    mobileSidebarOpen.value = !mobileSidebarOpen.value
-    return
-  }
-
-  sidebarCollapsed.value = !sidebarCollapsed.value
 }
 </script>
