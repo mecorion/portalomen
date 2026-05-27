@@ -7,9 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { computed } from 'vue'
 
-import { useDashboardStore } from '../../stores/dashboardStore'
+import {
+  useDashboardStore,
+  type ChartMetric,
+  type ChartType,
+  type DashboardFilters as DashboardFiltersState
+} from '../../stores/dashboardStore'
 
 import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 
@@ -18,41 +23,40 @@ import DashboardChartSection from '../../components/dashboard/DashboardChartSect
 import DashboardTable from '../../components/dashboard/DashboardTable.vue'
 
 import { useCsvExport } from '../../composables/useCsvExport'
+import { usePersistedState } from '../../composables/usePersistedState'
 
 const dashboardStore = useDashboardStore()
 
 const { exportToCsv } = useCsvExport()
 
-onMounted(() => {
-  dashboardStore.loadState()
+type DashboardPersistedState = {
+  filters: DashboardFiltersState
+  activeMetrics: ChartMetric[]
+  chartType: ChartType
+}
+
+usePersistedState<DashboardPersistedState>({
+  key: 'dashboard-state',
+  version: 1,
+  source: computed(() => ({
+    filters: dashboardStore.filters,
+    activeMetrics: dashboardStore.activeMetrics,
+    chartType: dashboardStore.chartType
+  })),
+  restore(state) {
+    if (state.filters) {
+      dashboardStore.filters = state.filters
+    }
+
+    if (state.activeMetrics) {
+      dashboardStore.activeMetrics = state.activeMetrics
+    }
+
+    if (state.chartType) {
+      dashboardStore.chartType = state.chartType
+    }
+  }
 })
-
-watch(
-  () => dashboardStore.filters,
-  () => {
-    dashboardStore.saveState()
-  },
-  {
-    deep: true
-  }
-)
-
-watch(
-  () => dashboardStore.activeMetrics,
-  () => {
-    dashboardStore.saveState()
-  },
-  {
-    deep: true
-  }
-)
-
-watch(
-  () => dashboardStore.chartType,
-  () => {
-    dashboardStore.saveState()
-  }
-)
 
 function handleExport() {
   const headers = [

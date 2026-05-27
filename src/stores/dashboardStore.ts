@@ -51,8 +51,6 @@ function getMonthKey(date: Date): string {
   })
 }
 
-const STORAGE_KEY = 'dashboard-state'
-
 export const useDashboardStore = defineStore('dashboard', {
   state: () => ({
     filters: {
@@ -376,52 +374,12 @@ export const useDashboardStore = defineStore('dashboard', {
   },
 
   actions: {
-
-    saveState() {
-      localStorage.setItem(
-        STORAGE_KEY,
-        JSON.stringify({
-          filters: this.filters,
-          activeMetrics: this.activeMetrics,
-          chartType: this.chartType
-        })
-      )
-    },
-
-    loadState() {
-      const raw = localStorage.getItem(STORAGE_KEY)
-
-      if (!raw) {
-        return
-      }
-
-      try {
-        const parsed = JSON.parse(raw)
-
-        if (parsed.filters) {
-          this.filters = parsed.filters
-        }
-
-        if (parsed.activeMetrics) {
-          this.activeMetrics = parsed.activeMetrics
-        }
-
-        if (parsed.chartType) {
-          this.chartType = parsed.chartType
-        }
-      } catch (e) {
-        console.error(e)
-      }
-    },
-
     setChartType(type: ChartType) {
       this.chartType = type
-      this.saveState()
     },
 
     setActiveMetrics(metrics: ChartMetric[]) {
       this.activeMetrics = metrics
-      this.saveState()
     },
 
     setFilters(payload: Partial<DashboardFilters>) {
@@ -429,7 +387,6 @@ export const useDashboardStore = defineStore('dashboard', {
         ...this.filters,
         ...payload
       }
-      this.saveState()
     },
 
     updateRow(id: number, payload: Partial<DashboardRow>) {
@@ -440,7 +397,6 @@ export const useDashboardStore = defineStore('dashboard', {
       }
 
       Object.assign(row, payload)
-      this.saveState()
     },
 
     addRow() {
@@ -457,12 +413,10 @@ export const useDashboardStore = defineStore('dashboard', {
         category: 'Электроника',
         region: 'Алматы'
       })
-      this.saveState()
     },
 
     deleteRow(id: number) {
       this.rows = this.rows.filter((row) => row.id !== id)
-      this.saveState()
     }
   }
 })

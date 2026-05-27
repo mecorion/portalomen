@@ -22,6 +22,7 @@ import { useRoute } from 'vue-router'
 
 import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 import ToolLayoutRenderer from '../../components/tools/ToolLayoutRenderer.vue'
+import { loadPersistedState, savePersistedState } from '../../composables/usePersistedState'
 import { fetchToolConfig } from '../../services/toolRegistry'
 import type { ToolConfig } from '../../types/toolConfig'
 
@@ -46,7 +47,11 @@ watch(
       return
     }
 
-    localStorage.setItem(`${toolConfig.value.persistence.key}:state`, JSON.stringify(toolState))
+    savePersistedState(
+      `${toolConfig.value.persistence.key}:state`,
+      { ...toolState },
+      toolConfig.value.version
+    )
   },
   { deep: true }
 )
@@ -67,24 +72,12 @@ async function loadTool(slug: string) {
 }
 
 function restoreToolState(config: ToolConfig) {
-  const storedState = readStoredState(config.persistence.key)
+  const storedState = loadPersistedState<Record<string, unknown>>(
+    `${config.persistence.key}:state`,
+    config.version
+  )
 
-  Object.assign(toolState, config.defaultState, storedState)
-}
-
-function readStoredState(key: string): Record<string, unknown> {
-  const storedValue = localStorage.getItem(`${key}:state`)
-
-  if (!storedValue) {
-    return {}
-  }
-
-  try {
-    const parsedValue = JSON.parse(storedValue)
-    return typeof parsedValue === 'object' && parsedValue !== null ? parsedValue : {}
-  } catch {
-    return {}
-  }
+  Object.assign(toolState, config.defaultState, storedState ?? {})
 }
 
 function clearToolState() {

@@ -101,7 +101,5 @@ function resetFilters() {
     group: 'day',
     search: ''
   }
-
-  dashboardStore.saveState()
 }
 </script>
