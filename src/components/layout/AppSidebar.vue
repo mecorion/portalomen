@@ -131,6 +131,7 @@ const menuItems = [
     action: () => goPath(item.path)
   })),
   { label: 'UI Kit', path: '/ui', icon: 'M12 3L4 7l8 4 8-4-8-4ZM4 12l8 4 8-4M4 17l8 4 8-4', action: goShowcase },
+  { label: 'Документация', path: '/docs', icon: 'M5 4h10a4 4 0 0 1 4 4v12H7a2 2 0 0 1-2-2V4ZM7 4v14M9 8h6M9 12h6', action: () => goPath('/docs') },
   { label: 'Продажи', icon: 'M4 19h16M7 16V9M12 16V5M17 16v-4' },
   { label: 'Клиенты', icon: 'M16 11a4 4 0 1 0-8 0M4 20a8 8 0 0 1 16 0' },
   { label: 'Товары', icon: 'M6 7h12l-1 13H7L6 7ZM9 7a3 3 0 0 1 6 0' },

@@ -1785,6 +1785,125 @@
   color: var(--tool-accent, var(--color-primary));
 }
 
+.docs-page {
+  min-height: 100vh;
+}
+
+.docs-layout {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.docs-nav {
+  position: sticky;
+  top: 18px;
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+}
+
+.docs-nav__item {
+  min-height: 38px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.docs-nav__item:hover,
+.docs-nav__item--active {
+  background: #eaf3ff;
+  color: var(--color-primary);
+}
+
+.docs-content {
+  padding: 22px;
+}
+
+.docs-content__header {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.docs-content__header h2 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.docs-content__header p {
+  max-width: 860px;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.docs-content__blocks {
+  display: grid;
+  gap: 18px;
+  padding-top: 18px;
+}
+
+.docs-block {
+  display: grid;
+  gap: 10px;
+}
+
+.docs-block h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.docs-block p,
+.docs-block li {
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.58;
+}
+
+.docs-block p {
+  margin: 0;
+}
+
+.docs-block ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.docs-block pre {
+  max-width: 100%;
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: #f8fbff;
+  color: var(--color-text);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.docs-block code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 @keyframes ui-spin {
   to {
     transform: rotate(360deg);
@@ -1927,6 +2046,14 @@
   .tool-runtime-area--sticky {
     position: static;
     max-height: none;
+  }
+
+  .docs-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .docs-nav {
+    position: static;
   }
 }
 

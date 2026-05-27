@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import DashboardView from '../views/dashboard/DashboardView.vue'
+import DocsView from '../views/docs/DocsView.vue'
 import ToolsCatalogView from '../views/tools/ToolsCatalogView.vue'
 import ToolRuntimeView from '../views/tools/ToolRuntimeView.vue'
 import UIShowcase from '../views/ui/UIShowcase.vue'
@@ -27,6 +28,11 @@ export const router = createRouter({
       path: '/ui',
       name: 'ui-showcase',
       component: UIShowcase
+    },
+    {
+      path: '/docs',
+      name: 'docs',
+      component: DocsView
     }
   ]
 })
