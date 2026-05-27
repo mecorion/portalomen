@@ -10,6 +10,10 @@ export type ToolConfig = {
   slug: string
   title: string
   version: number
+  catalog: {
+    description: string
+    accentColor: string
+  }
   navigation: {
     label: string
     icon: string

@@ -59,7 +59,7 @@
         v-for="item in menuItems"
         :key="item.label"
         class="sidebar-menu__item"
-        :class="{ active: item.path === currentPath }"
+        :class="{ active: isActiveItem(item.path) }"
         :title="collapsed ? item.label : undefined"
         @click="item.action?.()"
       >
@@ -150,5 +150,17 @@ function goShowcase() {
 function goPath(path: string) {
   router.push(path)
   emit('close')
+}
+
+function isActiveItem(path?: string) {
+  if (!path) {
+    return false
+  }
+
+  if (path === '/tools') {
+    return currentPath.value === '/tools' || currentPath.value.startsWith('/tools/')
+  }
+
+  return path === currentPath.value
 }
 </script>

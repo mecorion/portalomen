@@ -3,6 +3,10 @@
   "slug": "mantica",
   "title": "Мантика",
   "version": 1,
+  "catalog": {
+    "description": "Сравнение продаж, уровня сервиса, наполненности и цены по выбранному периоду.",
+    "accentColor": "#22c55e"
+  },
   "navigation": {
     "label": "Мантика",
     "icon": "M4 18V6M8 18V9M12 18V4M16 18v-7M20 18V8M3 20h18",

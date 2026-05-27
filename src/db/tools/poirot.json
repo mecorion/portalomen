@@ -3,6 +3,10 @@
   "slug": "poirot",
   "title": "Пуаро",
   "version": 1,
+  "catalog": {
+    "description": "Анализ динамики показателей продаж с фильтрами, графиком и детальной таблицей.",
+    "accentColor": "#1677ff"
+  },
   "navigation": {
     "label": "Пуаро",
     "icon": "M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 10l8 8M18 16l3-3M4 21h8M6 17h4",
