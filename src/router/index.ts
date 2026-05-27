@@ -1,8 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 import DashboardView from '../views/dashboard/DashboardView.vue'
-import ManticaView from '../views/ManticaView.vue'
-import PoirotView from '../views/PoirotView.vue'
+import ToolRuntimeView from '../views/tools/ToolRuntimeView.vue'
 import UIShowcase from '../views/ui/UIShowcase.vue'
 
 export const router = createRouter({
@@ -14,14 +13,9 @@ export const router = createRouter({
       component: DashboardView
     },
     {
-      path: '/poirot',
-      name: 'poirot',
-      component: PoirotView
-    },
-    {
-      path: '/mantica',
-      name: 'mantica',
-      component: ManticaView
+      path: '/tools/:slug',
+      name: 'tool-runtime',
+      component: ToolRuntimeView
     },
     {
       path: '/ui',

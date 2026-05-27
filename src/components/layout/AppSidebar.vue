@@ -105,6 +105,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { getToolNavigationItems } from '../../services/toolRegistry'
 
 defineProps<{
   collapsed?: boolean
@@ -123,8 +124,12 @@ const currentPath = computed(() => route.path)
 
 const menuItems = [
   { label: 'Дашборд', path: '/', icon: 'M4 13h6V4H4v9ZM14 20h6V4h-6v16ZM4 20h6v-3H4v3Z', action: goDashboard },
-  { label: 'Пуаро', path: '/poirot', icon: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM12 10l8 8M18 16l3-3M4 21h8M6 17h4' , action: goPoirot },
-  { label: 'Мантика', path: '/mantica', icon: 'M4 18V6M8 18V9M12 18V4M16 18v-7M20 18V8M3 20h18', action: goMantica },
+  ...getToolNavigationItems().map((item) => ({
+    label: item.label,
+    path: item.path,
+    icon: item.icon,
+    action: () => goPath(item.path)
+  })),
   { label: 'UI Kit', path: '/ui', icon: 'M12 3L4 7l8 4 8-4-8-4ZM4 12l8 4 8-4M4 17l8 4 8-4', action: goShowcase },
   { label: 'Продажи', icon: 'M4 19h16M7 16V9M12 16V5M17 16v-4' },
   { label: 'Клиенты', icon: 'M16 11a4 4 0 1 0-8 0M4 20a8 8 0 0 1 16 0' },
@@ -135,22 +140,15 @@ const menuItems = [
 ]
 
 function goDashboard() {
-  router.push('/')
-  emit('close')
-}
-
-function goPoirot() {
-  router.push('/poirot')
-  emit('close')
-}
-
-function goMantica() {
-  router.push('/mantica')
-  emit('close')
+  goPath('/')
 }
 
 function goShowcase() {
-  router.push('/ui')
+  goPath('/ui')
+}
+
+function goPath(path: string) {
+  router.push(path)
   emit('close')
 }
 </script>
