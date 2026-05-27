@@ -154,7 +154,62 @@ export const portalomenDocs: DocsSection[] = [
       {
         type: 'text',
         body: [
-          'ToolComponentRenderer пока содержит несколько типов компонентов в одном файле. Следующий архитектурный шаг: разнести его на ToolFiltersRenderer, ToolChartRenderer, ToolTableRenderer и ToolInfoPanelRenderer, затем добавить ComponentRegistry.'
+          'ToolComponentRenderer теперь является тонким диспетчером. Он не содержит логику конкретных компонентов, а выбирает renderer из registry по component.type.'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'component-registry',
+    title: 'Component Registry',
+    description: 'Registry нужен, чтобы runtime расширялся без роста одного большого if/else компонента.',
+    blocks: [
+      {
+        type: 'text',
+        body: [
+          'Раньше ToolComponentRenderer напрямую содержал filters, chart, table и info-panel. Такой подход быстро ломается, когда типов компонентов становится много.',
+          'Теперь каждый тип runtime-компонента живет в отдельном renderer-файле внутри src/components/tools/renderers. Общий ToolComponentRenderer только получает component.type и выбирает подходящий renderer.'
+        ]
+      },
+      {
+        type: 'list',
+        title: 'Текущие renderer-компоненты',
+        items: [
+          'ToolFiltersRenderer.vue: рендерит select, dateRange и search фильтры.',
+          'ToolChartRenderer.vue: строит labels и series из dataSource и передает их в Chart.vue.',
+          'ToolTableRenderer.vue: фильтрует rows и передает их в DataTableUI.',
+          'ToolInfoPanelRenderer.vue: показывает данные выбранной точки или строки.',
+          'toolRendererUtils.ts: общие функции фильтрации rows, чтения state и форматирования значений.'
+        ]
+      },
+      {
+        type: 'code',
+        title: 'Registry',
+        language: 'ts',
+        code: "// Registry связывает строковый component.type из JSON с Vue renderer.\n// Благодаря этому ToolComponentRenderer не знает деталей filters/chart/table.\nexport const toolComponentRegistry: Record<ToolComponentType, Component> = {\n  filters: ToolFiltersRenderer,\n  chart: ToolChartRenderer,\n  table: ToolTableRenderer,\n  'info-panel': ToolInfoPanelRenderer\n}"
+      },
+      {
+        type: 'code',
+        title: 'Тонкий dispatcher',
+        language: 'vue',
+        code: '<!-- renderer вычисляется по component.type -->\n<!-- component, dataSources и state имеют одинаковый контракт для всех renderer-ов -->\n<component\n  :is="renderer"\n  :component="component"\n  :data-sources="dataSources"\n  :state="state"\n  @state-change="handleStateChange"\n/>'
+      },
+      {
+        type: 'code',
+        title: 'Пример renderer-компонента',
+        language: 'ts',
+        code: "// ToolTableRenderer не хранит бизнес-логику инструмента.\n// Он получает dataSourceId из component config и применяет общий фильтр по state.\nconst rows = computed(() => getFilteredRows(\n  props.component.dataSourceId,\n  props.dataSources,\n  props.state\n))"
+      },
+      {
+        type: 'list',
+        title: 'Как добавить новый тип компонента',
+        items: [
+          'Добавить новый literal type в ToolComponentType.',
+          'Описать конфиг нового компонента в ToolComponentConfig.',
+          'Добавить runtime validation для нового component.type.',
+          'Создать renderer в src/components/tools/renderers.',
+          'Добавить renderer в toolComponentRegistry.',
+          'После этого JSON-инструмент сможет использовать новый component.type.'
         ]
       }
     ]
