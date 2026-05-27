@@ -36,7 +36,6 @@
             <AppTopbar title="Дашборд" @export="handleExport" />
 
             <DashboardFilters />
-            <DashboardStats />
             <DashboardChartSection />
             <DashboardTable />
         </main>
@@ -52,7 +51,7 @@ import AppSidebar from '../../components/layout/AppSidebar.vue'
 import AppTopbar from '../../components/layout/AppTopbar.vue'
 
 import DashboardFilters from '../../components/dashboard/DashboardFilters.vue'
-import DashboardStats from '../../components/dashboard/DashboardStats.vue'
+// import DashboardStats from '../../components/dashboard/DashboardStats.vue'
 import DashboardChartSection from '../../components/dashboard/DashboardChartSection.vue'
 import DashboardTable from '../../components/dashboard/DashboardTable.vue'
 
