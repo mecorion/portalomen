@@ -24,7 +24,7 @@
         v-for="component in area.components"
         :key="component.id"
         :component="component"
-        :data-sources="config.dataSources"
+        :data-sources="dataSources"
         :state="state"
         @state-change="handleStateChange"
       />
@@ -36,10 +36,11 @@
 import { computed } from 'vue'
 
 import ToolComponentRenderer from './ToolComponentRenderer.vue'
-import type { ToolConfig } from '../../types/toolConfig'
+import type { ToolConfig, ToolDataSources } from '../../types/toolConfig'
 
 const props = defineProps<{
   config: ToolConfig
+  dataSources: ToolDataSources
   state: Record<string, unknown>
 }>()
 

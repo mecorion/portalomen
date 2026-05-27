@@ -14,6 +14,7 @@
     <ToolLayoutRenderer
       v-else
       :config="toolConfig"
+      :data-sources="toolDataSources"
       :state="toolState"
       @state-change="setToolState"
     />
@@ -27,13 +28,15 @@ import { useRoute } from 'vue-router'
 import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 import ToolLayoutRenderer from '../../components/tools/ToolLayoutRenderer.vue'
 import { loadPersistedState, savePersistedState } from '../../composables/usePersistedState'
+import { fetchToolDataSources } from '../../services/toolDataRegistry'
 import { fetchToolConfig } from '../../services/toolRegistry'
-import type { ToolConfig } from '../../types/toolConfig'
+import type { ToolConfig, ToolDataSources } from '../../types/toolConfig'
 
 const route = useRoute()
 
 const loading = ref(false)
 const toolConfig = ref<ToolConfig>()
+const toolDataSources = ref<ToolDataSources>({})
 const configErrors = ref<string[]>([])
 const toolState = reactive<Record<string, unknown>>({})
 
@@ -64,6 +67,7 @@ watch(
 async function loadTool(slug: string) {
   loading.value = true
   toolConfig.value = undefined
+  toolDataSources.value = {}
   configErrors.value = []
   clearToolState()
 
@@ -80,7 +84,22 @@ async function loadTool(slug: string) {
     return
   }
 
+  const dataResult = await fetchToolDataSources(result.config)
+
+  if (dataResult.status === 'invalid') {
+    configErrors.value = dataResult.errors
+    loading.value = false
+    return
+  }
+
+  if (dataResult.status === 'not-found') {
+    configErrors.value = [`Данные инструмента ${result.config.slug} не найдены`]
+    loading.value = false
+    return
+  }
+
   toolConfig.value = result.config
+  toolDataSources.value = dataResult.dataSources
 
   if (result.config) {
     restoreToolState(result.config)

@@ -1,0 +1,74 @@
+{
+  "slug": "mantica",
+  "dataSources": {
+    "manticaPoints": {
+      "id": "manticaPoints",
+      "rows": [
+        {
+          "date": "18.05.2026",
+          "dateShort": "18.05",
+          "salesGt": 8200,
+          "serviceLevel": 91,
+          "fullness": 78,
+          "unitPrice": 145
+        },
+        {
+          "date": "19.05.2026",
+          "dateShort": "19.05",
+          "salesGt": 9000,
+          "serviceLevel": 92.4,
+          "fullness": 81.4,
+          "unitPrice": 152
+        },
+        {
+          "date": "20.05.2026",
+          "dateShort": "20.05",
+          "salesGt": 9800,
+          "serviceLevel": 93.8,
+          "fullness": 81.8,
+          "unitPrice": 159
+        },
+        {
+          "date": "21.05.2026",
+          "dateShort": "21.05",
+          "salesGt": 9760,
+          "serviceLevel": 95.2,
+          "fullness": 85.2,
+          "unitPrice": 157
+        },
+        {
+          "date": "22.05.2026",
+          "dateShort": "22.05",
+          "salesGt": 10580,
+          "serviceLevel": 91,
+          "fullness": 85.6,
+          "unitPrice": 164
+        },
+        {
+          "date": "23.05.2026",
+          "dateShort": "23.05",
+          "salesGt": 11400,
+          "serviceLevel": 90.2,
+          "fullness": 89,
+          "unitPrice": 171
+        },
+        {
+          "date": "24.05.2026",
+          "dateShort": "24.05",
+          "salesGt": 11360,
+          "serviceLevel": 93.8,
+          "fullness": 89.4,
+          "unitPrice": 169
+        },
+        {
+          "date": "25.05.2026",
+          "dateShort": "25.05",
+          "salesGt": 12180,
+          "serviceLevel": 95.2,
+          "fullness": 92.8,
+          "unitPrice": 176
+        }
+      ]
+    }
+  }
+}

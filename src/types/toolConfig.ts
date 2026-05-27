@@ -26,7 +26,7 @@ export type ToolConfig = {
   }
   defaultState: Record<string, unknown>
   layout: ToolLayoutConfig
-  dataSources: Record<string, ToolDataSource>
+  dataSources: Record<string, ToolDataSourceConfig>
 }
 
 export type ToolLayoutConfig = {
@@ -126,10 +126,23 @@ export type ToolInfoMetricConfig = {
   format?: 'number' | 'money' | 'percent' | 'text'
 }
 
-export type ToolDataSource = {
+export type ToolDataSourceConfig = {
   id: string
-  rows: ToolDataRow[]
   filterBy?: Record<string, string>
+}
+
+export type ToolDataSource = ToolDataSourceConfig & {
+  rows: ToolDataRow[]
+}
+
+export type ToolDataSources = Record<string, ToolDataSource>
+
+export type ToolDataPayload = {
+  slug: string
+  dataSources: Record<string, {
+    id: string
+    rows: ToolDataRow[]
+  }>
 }
 
 export type ToolDataRow = Record<string, string | number | null>

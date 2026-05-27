@@ -23,7 +23,10 @@
     "tt": "all",
     "group": "all",
     "position": "all",
-    "period": ["2025-05-01", "2025-05-31"],
+    "period": [
+      "2025-05-01",
+      "2025-05-31"
+    ],
     "groupBy": "day"
   },
   "layout": {
@@ -39,12 +42,111 @@
             "id": "poirot-filters",
             "type": "filters",
             "fields": [
-              { "id": "procId", "label": "proc_id", "type": "select", "placeholder": "Выберите значение", "options": [{ "label": "Выберите значение", "value": "all" }, { "label": "1001", "value": "1001" }, { "label": "1002", "value": "1002" }] },
-              { "id": "rc", "label": "РЦ", "type": "select", "placeholder": "Выберите значение", "options": [{ "label": "Выберите значение", "value": "all" }, { "label": "РЦ-01", "value": "РЦ-01" }, { "label": "РЦ-02", "value": "РЦ-02" }] },
-              { "id": "tt", "label": "ТТ", "type": "select", "placeholder": "Выберите значение", "options": [{ "label": "Выберите значение", "value": "all" }, { "label": "ТТ-001", "value": "ТТ-001" }, { "label": "ТТ-002", "value": "ТТ-002" }] },
-              { "id": "group", "label": "Группа", "type": "select", "placeholder": "Выберите значение", "options": [{ "label": "Выберите значение", "value": "all" }, { "label": "Группа A", "value": "Группа A" }, { "label": "Группа B", "value": "Группа B" }] },
-              { "id": "position", "label": "Позиция", "type": "select", "placeholder": "Выберите значение", "options": [{ "label": "Выберите значение", "value": "all" }, { "label": "Позиция 1", "value": "Позиция 1" }, { "label": "Позиция 2", "value": "Позиция 2" }] },
-              { "id": "period", "label": "Период", "type": "dateRange" }
+              {
+                "id": "procId",
+                "label": "proc_id",
+                "type": "select",
+                "placeholder": "Выберите значение",
+                "options": [
+                  {
+                    "label": "Выберите значение",
+                    "value": "all"
+                  },
+                  {
+                    "label": "1001",
+                    "value": "1001"
+                  },
+                  {
+                    "label": "1002",
+                    "value": "1002"
+                  }
+                ]
+              },
+              {
+                "id": "rc",
+                "label": "РЦ",
+                "type": "select",
+                "placeholder": "Выберите значение",
+                "options": [
+                  {
+                    "label": "Выберите значение",
+                    "value": "all"
+                  },
+                  {
+                    "label": "РЦ-01",
+                    "value": "РЦ-01"
+                  },
+                  {
+                    "label": "РЦ-02",
+                    "value": "РЦ-02"
+                  }
+                ]
+              },
+              {
+                "id": "tt",
+                "label": "ТТ",
+                "type": "select",
+                "placeholder": "Выберите значение",
+                "options": [
+                  {
+                    "label": "Выберите значение",
+                    "value": "all"
+                  },
+                  {
+                    "label": "ТТ-001",
+                    "value": "ТТ-001"
+                  },
+                  {
+                    "label": "ТТ-002",
+                    "value": "ТТ-002"
+                  }
+                ]
+              },
+              {
+                "id": "group",
+                "label": "Группа",
+                "type": "select",
+                "placeholder": "Выберите значение",
+                "options": [
+                  {
+                    "label": "Выберите значение",
+                    "value": "all"
+                  },
+                  {
+                    "label": "Группа A",
+                    "value": "Группа A"
+                  },
+                  {
+                    "label": "Группа B",
+                    "value": "Группа B"
+                  }
+                ]
+              },
+              {
+                "id": "position",
+                "label": "Позиция",
+                "type": "select",
+                "placeholder": "Выберите значение",
+                "options": [
+                  {
+                    "label": "Выберите значение",
+                    "value": "all"
+                  },
+                  {
+                    "label": "Позиция 1",
+                    "value": "Позиция 1"
+                  },
+                  {
+                    "label": "Позиция 2",
+                    "value": "Позиция 2"
+                  }
+                ]
+              },
+              {
+                "id": "period",
+                "label": "Период",
+                "type": "dateRange"
+              }
             ]
           }
         ]
@@ -63,15 +165,84 @@
               "height": 420,
               "mobileHeight": 320,
               "series": [
-                { "name": "Показатель 1", "field": "metric1", "type": "line", "color": "#1677ff", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 2", "field": "metric2", "type": "line", "color": "#42b883", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 3", "field": "metric3", "type": "line", "color": "#7c3aed", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 4", "field": "metric4", "type": "line", "color": "#f59e0b", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 5", "field": "metric5", "type": "line", "color": "#06b6d4", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 6", "field": "metric6", "type": "line", "color": "#ef4444", "lineWidth": 2.4, "symbolSize": 5 },
-                { "name": "Показатель 7", "field": "metric7", "type": "line", "color": "#2563eb", "dashed": true, "showSymbol": false, "lineWidth": 2, "symbolSize": 5 },
-                { "name": "Показатель 8", "field": "metric8", "type": "line", "color": "#22c55e", "dashed": true, "showSymbol": false, "lineWidth": 2, "symbolSize": 5 },
-                { "name": "Показатель 9", "field": "metric9", "type": "line", "color": "#8b5cf6", "dashed": true, "showSymbol": false, "lineWidth": 2, "symbolSize": 5 }
+                {
+                  "name": "Показатель 1",
+                  "field": "metric1",
+                  "type": "line",
+                  "color": "#1677ff",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 2",
+                  "field": "metric2",
+                  "type": "line",
+                  "color": "#42b883",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 3",
+                  "field": "metric3",
+                  "type": "line",
+                  "color": "#7c3aed",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 4",
+                  "field": "metric4",
+                  "type": "line",
+                  "color": "#f59e0b",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 5",
+                  "field": "metric5",
+                  "type": "line",
+                  "color": "#06b6d4",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 6",
+                  "field": "metric6",
+                  "type": "line",
+                  "color": "#ef4444",
+                  "lineWidth": 2.4,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 7",
+                  "field": "metric7",
+                  "type": "line",
+                  "color": "#2563eb",
+                  "dashed": true,
+                  "showSymbol": false,
+                  "lineWidth": 2,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 8",
+                  "field": "metric8",
+                  "type": "line",
+                  "color": "#22c55e",
+                  "dashed": true,
+                  "showSymbol": false,
+                  "lineWidth": 2,
+                  "symbolSize": 5
+                },
+                {
+                  "name": "Показатель 9",
+                  "field": "metric9",
+                  "type": "line",
+                  "color": "#8b5cf6",
+                  "dashed": true,
+                  "showSymbol": false,
+                  "lineWidth": 2,
+                  "symbolSize": 5
+                }
               ]
             }
           },
@@ -82,21 +253,101 @@
             "dataSourceId": "poirotRows",
             "height": 430,
             "columns": [
-              { "prop": "procId", "label": "proc_id", "width": 82, "fixed": true },
-              { "prop": "rc", "label": "РЦ", "width": 82, "fixed": true },
-              { "prop": "tt", "label": "ТТ", "width": 92 },
-              { "prop": "group", "label": "Группа", "width": 110 },
-              { "prop": "position", "label": "Позиция", "width": 118 },
-              { "prop": "date", "label": "Дата", "width": 112 },
-              { "prop": "metric1", "label": "Показатель 1", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric2", "label": "Показатель 2", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric3", "label": "Показатель 3", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric4", "label": "Показатель 4", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric5", "label": "Показатель 5", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric6", "label": "Показатель 6", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric7", "label": "Показатель 7", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric8", "label": "Показатель 8", "width": 126, "align": "right", "format": "number" },
-              { "prop": "metric9", "label": "Показатель 9", "width": 126, "align": "right", "format": "number" }
+              {
+                "prop": "procId",
+                "label": "proc_id",
+                "width": 82,
+                "fixed": true
+              },
+              {
+                "prop": "rc",
+                "label": "РЦ",
+                "width": 82,
+                "fixed": true
+              },
+              {
+                "prop": "tt",
+                "label": "ТТ",
+                "width": 92
+              },
+              {
+                "prop": "group",
+                "label": "Группа",
+                "width": 110
+              },
+              {
+                "prop": "position",
+                "label": "Позиция",
+                "width": 118
+              },
+              {
+                "prop": "date",
+                "label": "Дата",
+                "width": 112
+              },
+              {
+                "prop": "metric1",
+                "label": "Показатель 1",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric2",
+                "label": "Показатель 2",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric3",
+                "label": "Показатель 3",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric4",
+                "label": "Показатель 4",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric5",
+                "label": "Показатель 5",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric6",
+                "label": "Показатель 6",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric7",
+                "label": "Показатель 7",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric8",
+                "label": "Показатель 8",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              },
+              {
+                "prop": "metric9",
+                "label": "Показатель 9",
+                "width": 126,
+                "align": "right",
+                "format": "number"
+              }
             ]
           }
         ]
@@ -112,20 +363,7 @@
         "tt": "tt",
         "group": "group",
         "position": "position"
-      },
-      "rows": [
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 1", "date": "01.05.2025", "dateShort": "01.05", "metric1": 2417, "metric2": 1935, "metric3": 1015, "metric4": 1278, "metric5": 854, "metric6": 696, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 1", "date": "02.05.2025", "dateShort": "02.05", "metric1": 2534, "metric2": 2020, "metric3": 1080, "metric4": 1356, "metric5": 908, "metric6": 742, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 1", "date": "03.05.2025", "dateShort": "03.05", "metric1": 2651, "metric2": 1985, "metric3": 1145, "metric4": 1434, "metric5": 884, "metric6": 788, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-002", "group": "Группа A", "position": "Позиция 1", "date": "04.05.2025", "dateShort": "04.05", "metric1": 2548, "metric2": 2070, "metric3": 1210, "metric4": 1344, "metric5": 938, "metric6": 834, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-02", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 1", "date": "05.05.2025", "dateShort": "05.05", "metric1": 2665, "metric2": 2155, "metric3": 1100, "metric4": 1422, "metric5": 992, "metric6": 880, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа B", "position": "Позиция 1", "date": "06.05.2025", "dateShort": "06.05", "metric1": 2782, "metric2": 2120, "metric3": 1165, "metric4": 1500, "metric5": 968, "metric6": 782, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 2", "date": "07.05.2025", "dateShort": "07.05", "metric1": 2899, "metric2": 2205, "metric3": 1230, "metric4": 1578, "metric5": 1022, "metric6": 828, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-002", "group": "Группа A", "position": "Позиция 1", "date": "08.05.2025", "dateShort": "08.05", "metric1": 2796, "metric2": 2290, "metric3": 1295, "metric4": 1488, "metric5": 1076, "metric6": 874, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1001", "rc": "РЦ-01", "tt": "ТТ-001", "group": "Группа A", "position": "Позиция 1", "date": "09.05.2025", "dateShort": "09.05", "metric1": 2913, "metric2": 2255, "metric3": 1360, "metric4": 1566, "metric5": 1052, "metric6": 920, "metric7": null, "metric8": null, "metric9": null },
-        { "procId": "1002", "rc": "РЦ-02", "tt": "ТТ-001", "group": "Группа B", "position": "Позиция 1", "date": "19.05.2025", "dateShort": "19.05", "metric1": 3643, "metric2": 2825, "metric3": 1520, "metric4": 2054, "metric5": 1378, "metric6": 1184, "metric7": 520, "metric8": 242, "metric9": null },
-        { "procId": "1002", "rc": "РЦ-01", "tt": "ТТ-002", "group": "Группа A", "position": "Позиция 2", "date": "26.05.2025", "dateShort": "26.05", "metric1": 4184, "metric2": 3110, "metric3": 1765, "metric4": 2398, "metric5": 1568, "metric6": 1434, "metric7": 835, "metric8": 676, "metric9": 258 }
-      ]
+      }
     }
   }
 }

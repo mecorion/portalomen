@@ -1,7 +1,7 @@
 import type {
   ToolComponentConfig,
   ToolConfig,
-  ToolDataSource
+  ToolDataSourceConfig
 } from './toolConfig'
 
 export type ToolConfigValidationResult =
@@ -109,10 +109,6 @@ function validateDataSources(value: unknown, errors: string[]) {
 
     requiredString(dataSource, 'id', errors, path)
 
-    if (!Array.isArray(dataSource.rows)) {
-      errors.push(`${path}.rows должен быть массивом`)
-    }
-
     if (dataSource.filterBy !== undefined && !isStringRecord(dataSource.filterBy)) {
       errors.push(`${path}.filterBy должен быть объектом string -> string`)
     }
@@ -138,14 +134,14 @@ function validateLayout(layout: unknown, dataSources: unknown, errors: string[])
     return
   }
 
-  const dataSourceMap = isRecord(dataSources) ? dataSources as Record<string, ToolDataSource> : {}
+  const dataSourceMap = isRecord(dataSources) ? dataSources as Record<string, ToolDataSourceConfig> : {}
 
   layout.areas.forEach((area, areaIndex) => {
     validateArea(area, areaIndex, dataSourceMap, errors)
   })
 }
 
-function validateArea(value: unknown, index: number, dataSources: Record<string, ToolDataSource>, errors: string[]) {
+function validateArea(value: unknown, index: number, dataSources: Record<string, ToolDataSourceConfig>, errors: string[]) {
   const path = `layout.areas[${index}]`
 
   if (!isRecord(value)) {
@@ -168,7 +164,7 @@ function validateArea(value: unknown, index: number, dataSources: Record<string,
 function validateComponent(
   value: unknown,
   path: string,
-  dataSources: Record<string, ToolDataSource>,
+  dataSources: Record<string, ToolDataSourceConfig>,
   errors: string[]
 ) {
   if (!isRecord(value)) {
@@ -273,7 +269,7 @@ function validateFiltersComponent(component: Extract<ToolComponentConfig, { type
 function validateDataSourceReference(
   dataSourceId: string | undefined,
   path: string,
-  dataSources: Record<string, ToolDataSource>,
+  dataSources: Record<string, ToolDataSourceConfig>,
   errors: string[]
 ) {
   if (!dataSourceId) {

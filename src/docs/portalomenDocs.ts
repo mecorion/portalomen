@@ -21,6 +21,7 @@ export const portalomenDocs: DocsSection[] = [
           'Frontend получает список доступных инструментов из registry/API.',
           'Пользователь выбирает инструмент.',
           'ToolRuntimeView загружает конфиг по slug.',
+          'ToolRuntimeView отдельно загружает данные для dataSources инструмента.',
           'LayoutRenderer и ComponentRenderer собирают страницу из layout areas и components.',
           'Состояние инструмента сохраняется в localStorage через общий persistence helper.'
         ]
@@ -29,7 +30,7 @@ export const portalomenDocs: DocsSection[] = [
         type: 'code',
         title: 'Runtime flow',
         language: 'text',
-        code: '/tools -> fetchToolCatalog() -> карточки инструментов\n/tools/:slug -> fetchToolConfig(slug) -> validateToolConfig() -> ToolRuntimeView -> ToolLayoutRenderer -> ToolComponentRenderer'
+        code: '/tools -> fetchToolCatalog() -> карточки инструментов\n/tools/:slug -> fetchToolConfig(slug) -> validateToolConfig() -> fetchToolDataSources(config) -> ToolRuntimeView -> ToolLayoutRenderer -> ToolComponentRenderer'
       }
     ]
   },
@@ -47,6 +48,7 @@ export const portalomenDocs: DocsSection[] = [
           'src/components/tools: runtime-компоненты для каталога и инструментов.',
           'src/views: страницы маршрутов, которые связывают layout и данные.',
           'src/db/tools: временные JSON-конфиги инструментов, будущая замена на PostgreSQL/API.',
+          'src/db/toolData: временные JSON-данные инструментов, будущая замена на data endpoints.',
           'src/services: загрузчики данных и registry-слой.',
           'src/types: TypeScript-типы и runtime validation.',
           'src/composables: переиспользуемая логика вроде CSV export и persisted state.'
@@ -99,14 +101,58 @@ export const portalomenDocs: DocsSection[] = [
           'persistence: ключи и флаги сохранения состояния.',
           'defaultState: состояние инструмента по умолчанию.',
           'layout: тип layout, density и список areas.',
-          'dataSources: временные данные для графиков, таблиц и панелей.'
+          'dataSources: декларативные описания источников данных и filter bindings. Реальные rows хранятся отдельно.'
         ]
       },
       {
         type: 'code',
         title: 'Минимальная форма',
         language: 'ts',
-        code: "type ToolConfig = {\n  id: string\n  slug: string\n  title: string\n  version: number\n  catalog: { description: string; accentColor: string }\n  navigation: { label: string; icon: string; order: number }\n  persistence: { key: string; state: boolean; configCache: boolean }\n  defaultState: Record<string, unknown>\n  layout: ToolLayoutConfig\n  dataSources: Record<string, ToolDataSource>\n}"
+        code: "type ToolConfig = {\n  id: string\n  slug: string\n  title: string\n  version: number\n  catalog: { description: string; accentColor: string }\n  navigation: { label: string; icon: string; order: number }\n  persistence: { key: string; state: boolean; configCache: boolean }\n  defaultState: Record<string, unknown>\n  layout: ToolLayoutConfig\n  // Здесь только описание источника и filter bindings, без rows.\n  dataSources: Record<string, ToolDataSourceConfig>\n}"
+      }
+    ]
+  },
+  {
+    id: 'data-sources',
+    title: 'Data Sources',
+    description: 'Данные инструментов отделены от ToolConfig, чтобы runtime был готов к backend и большим объемам данных.',
+    blocks: [
+      {
+        type: 'text',
+        body: [
+          'Раньше rows лежали прямо внутри src/db/tools/*.json. Это удобно для демо, но плохо для backend: конфиг инструмента становится тяжелым, смешивает описание интерфейса и данные, а фильтры невозможно нормально прокинуть в API.',
+          'Теперь ToolConfig описывает только интерфейс, layout, components и привязки к dataSourceId. Реальные rows лежат отдельно в src/db/toolData/*.data.json и грузятся через сервис toolDataRegistry.'
+        ]
+      },
+      {
+        type: 'list',
+        title: 'Новые сущности',
+        items: [
+          'ToolDataSourceConfig: описание источника в ToolConfig, например id и filterBy.',
+          'ToolDataPayload: payload с rows для конкретного slug инструмента.',
+          'ToolDataSources: runtime-структура, где metadata из config слита с rows из data payload.',
+          'fetchToolDataSources(config): временный mock-метод, который имитирует будущий backend endpoint.'
+        ]
+      },
+      {
+        type: 'code',
+        title: 'Разделение config и data',
+        language: 'text',
+        code: 'src/db/tools/poirot.json\n  -> layout, components, filters, dataSource bindings\n\nsrc/db/toolData/poirot.data.json\n  -> rows для chart/table/info-panel'
+      },
+      {
+        type: 'code',
+        title: 'Runtime загрузка',
+        language: 'ts',
+        code: "// Сначала грузится и валидируется описание инструмента.\nconst configResult = await fetchToolConfig(slug)\n\n// Потом отдельно грузятся данные для dataSourceId из конфига.\nconst dataResult = await fetchToolDataSources(configResult.config)\n\n// В renderer передается config отдельно от rows.\n<ToolLayoutRenderer\n  :config=\"toolConfig\"\n  :data-sources=\"toolDataSources\"\n  :state=\"toolState\"\n/>"
+      },
+      {
+        type: 'text',
+        title: 'Зачем это нужно',
+        body: [
+          'Такое разделение позволяет backend отдавать каталог и конфиг быстро, без тяжелых таблиц. Данные можно будет грузить отдельно, учитывать права доступа, применять фильтры на сервере и поддерживать пагинацию или виртуализацию.',
+          'Следующий backend-эквивалент этого слоя: GET /api/tools/:slug для конфига и GET /api/tools/:slug/data для данных.'
+        ]
       }
     ]
   },
