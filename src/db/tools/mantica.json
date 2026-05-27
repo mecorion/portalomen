@@ -1,0 +1,140 @@
+{
+  "id": "tool-mantica",
+  "slug": "mantica",
+  "title": "Мантика",
+  "version": 1,
+  "navigation": {
+    "label": "Мантика",
+    "icon": "M4 18V6M8 18V9M12 18V4M16 18v-7M20 18V8M3 20h18",
+    "order": 20
+  },
+  "persistence": {
+    "key": "portalomen-tool-mantica",
+    "state": true,
+    "configCache": true
+  },
+  "defaultState": {
+    "basicProcId": "basic-184",
+    "enrichProcId": "enrich-642",
+    "dataPeriod": ["2026-04-18", "2026-06-17"],
+    "analysisPeriod": ["2026-05-18", "2026-05-25"],
+    "group": "all",
+    "category": "all",
+    "rc": "all",
+    "storeFormat": "all",
+    "ka": "all",
+    "tp": "all",
+    "detail": "day",
+    "resultOutput": "chart",
+    "exportMode": "screen",
+    "bpCorrection": "enabled",
+    "aggregationMethod": "sum",
+    "regularWeek": "yes",
+    "selectedPointIndex": 0
+  },
+  "layout": {
+    "type": "point-filters-chart",
+    "density": "compact",
+    "areas": [
+      {
+        "id": "sidePanel",
+        "sticky": true,
+        "components": [
+          {
+            "id": "mantica-point-panel",
+            "type": "info-panel",
+            "title": "Точка графика",
+            "dataSourceId": "manticaPoints",
+            "selectedIndexStateKey": "selectedPointIndex",
+            "dateField": "date",
+            "metrics": [
+              { "label": "Продажи ГТ", "field": "salesGt", "format": "number" },
+              { "label": "Уровень сервиса", "field": "serviceLevel", "format": "percent" },
+              { "label": "Наполненность", "field": "fullness", "format": "percent" },
+              { "label": "Цена за ед.", "field": "unitPrice", "format": "money" }
+            ],
+            "context": [
+              { "label": "basic_proc_id", "stateKey": "basicProcId" },
+              { "label": "enrich_proc_id", "stateKey": "enrichProcId" },
+              { "label": "Детализация", "stateKey": "detail" }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "filters",
+        "title": "Фильтры",
+        "sticky": true,
+        "components": [
+          {
+            "id": "mantica-filters",
+            "type": "filters",
+            "fields": [
+              { "id": "basicProcId", "label": "basic_proc_id", "type": "select", "options": [{ "label": "basic-184", "value": "basic-184" }, { "label": "basic-203", "value": "basic-203" }] },
+              { "id": "enrichProcId", "label": "enrich_proc_id", "type": "select", "options": [{ "label": "enrich-642", "value": "enrich-642" }, { "label": "enrich-711", "value": "enrich-711" }] },
+              { "id": "dataPeriod", "label": "Данные за", "type": "dateRange" },
+              { "id": "analysisPeriod", "label": "Анализ. период", "type": "dateRange" },
+              { "id": "group", "label": "Группы", "type": "select", "options": [{ "label": "Все группы", "value": "all" }, { "label": "Группа A", "value": "group-a" }, { "label": "Группа B", "value": "group-b" }] },
+              { "id": "category", "label": "Категории", "type": "select", "options": [{ "label": "Все категории", "value": "all" }, { "label": "Категория 1", "value": "cat-1" }, { "label": "Категория 2", "value": "cat-2" }] },
+              { "id": "rc", "label": "РЦ", "type": "select", "options": [{ "label": "Все", "value": "all" }, { "label": "РЦ-01", "value": "rc-01" }, { "label": "РЦ-02", "value": "rc-02" }] },
+              { "id": "storeFormat", "label": "Формат ТТ", "type": "select", "options": [{ "label": "Все", "value": "all" }, { "label": "Гипермаркет", "value": "hyper" }, { "label": "Дискаунтер", "value": "discount" }] },
+              { "id": "ka", "label": "KA", "type": "select", "options": [{ "label": "Все", "value": "all" }, { "label": "KA-01", "value": "ka-01" }, { "label": "KA-02", "value": "ka-02" }] },
+              { "id": "tp", "label": "ТП", "type": "select", "options": [{ "label": "Все", "value": "all" }, { "label": "ТП Север", "value": "north" }, { "label": "ТП Юг", "value": "south" }] },
+              { "id": "detail", "label": "Детализация", "type": "select", "options": [{ "label": "День", "value": "day" }, { "label": "Неделя", "value": "week" }, { "label": "Месяц", "value": "month" }] },
+              { "id": "resultOutput", "label": "Вывод результата", "type": "select", "options": [{ "label": "График", "value": "chart" }, { "label": "Таблица", "value": "table" }, { "label": "График + таблица", "value": "both" }] },
+              { "id": "exportMode", "label": "Режим выгрузки", "type": "select", "options": [{ "label": "Экран", "value": "screen" }, { "label": "CSV", "value": "csv" }, { "label": "XLSX", "value": "xlsx" }] },
+              { "id": "bpCorrection", "label": "Корректировка БП", "type": "select", "options": [{ "label": "Включена", "value": "enabled" }, { "label": "Отключена", "value": "disabled" }] },
+              { "id": "aggregationMethod", "label": "Метод агрегации", "type": "select", "options": [{ "label": "Сумма", "value": "sum" }, { "label": "Среднее", "value": "avg" }, { "label": "Медиана", "value": "median" }] },
+              { "id": "regularWeek", "label": "Обычная неделя", "type": "select", "options": [{ "label": "Да", "value": "yes" }, { "label": "Нет", "value": "no" }] }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "main",
+        "components": [
+          {
+            "id": "mantica-chart",
+            "type": "chart",
+            "title": "Продажи, сервис и цена",
+            "dataSourceId": "manticaPoints",
+            "labelField": "dateShort",
+            "chart": {
+              "legend": true,
+              "legendPosition": "top",
+              "height": 660,
+              "mobileHeight": 420,
+              "grid": { "left": 72, "right": 116, "top": 42, "bottom": 42 },
+              "yAxes": [
+                { "name": "Продажи ГТ", "position": "left" },
+                { "name": "%", "position": "right", "min": 70, "max": 100, "formatter": "{value}%", "splitLine": false },
+                { "name": "₽/ед", "position": "right", "offset": 58, "formatter": "{value}₽", "splitLine": false }
+              ],
+              "series": [
+                { "name": "Продажи ГТ", "field": "salesGt", "type": "bar", "yAxisIndex": 0, "color": "#1677ff", "barWidth": 28 },
+                { "name": "Уровень сервиса", "field": "serviceLevel", "type": "line", "yAxisIndex": 1, "color": "#22c55e", "lineWidth": 3, "symbolSize": 7 },
+                { "name": "Наполненность", "field": "fullness", "type": "line", "yAxisIndex": 1, "color": "#f59e0b", "dashed": true, "lineWidth": 2, "symbolSize": 6 },
+                { "name": "Цена за единицу", "field": "unitPrice", "type": "line", "yAxisIndex": 2, "color": "#7c3aed", "lineWidth": 2.5, "symbolSize": 6 }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "dataSources": {
+    "manticaPoints": {
+      "id": "manticaPoints",
+      "rows": [
+        { "date": "18.05.2026", "dateShort": "18.05", "salesGt": 8200, "serviceLevel": 91, "fullness": 78, "unitPrice": 145 },
+        { "date": "19.05.2026", "dateShort": "19.05", "salesGt": 9000, "serviceLevel": 92.4, "fullness": 81.4, "unitPrice": 152 },
+        { "date": "20.05.2026", "dateShort": "20.05", "salesGt": 9800, "serviceLevel": 93.8, "fullness": 81.8, "unitPrice": 159 },
+        { "date": "21.05.2026", "dateShort": "21.05", "salesGt": 9760, "serviceLevel": 95.2, "fullness": 85.2, "unitPrice": 157 },
+        { "date": "22.05.2026", "dateShort": "22.05", "salesGt": 10580, "serviceLevel": 91, "fullness": 85.6, "unitPrice": 164 },
+        { "date": "23.05.2026", "dateShort": "23.05", "salesGt": 11400, "serviceLevel": 90.2, "fullness": 89, "unitPrice": 171 },
+        { "date": "24.05.2026", "dateShort": "24.05", "salesGt": 11360, "serviceLevel": 93.8, "fullness": 89.4, "unitPrice": 169 },
+        { "date": "25.05.2026", "dateShort": "25.05", "salesGt": 12180, "serviceLevel": 95.2, "fullness": 92.8, "unitPrice": 176 }
+      ]
+    }
+  }
+}
