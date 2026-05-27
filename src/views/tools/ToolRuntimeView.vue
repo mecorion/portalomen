@@ -5,6 +5,10 @@
     @export="handleExport"
   >
     <div v-if="loading" class="tool-runtime-status ui-card">Загрузка инструмента</div>
+    <div v-else-if="configErrors.length" class="tool-runtime-status tool-runtime-status--error ui-card">
+      <strong>Конфиг инструмента некорректен</strong>
+      <span v-for="error in configErrors" :key="error">{{ error }}</span>
+    </div>
     <div v-else-if="!toolConfig" class="tool-runtime-status ui-card">Инструмент не найден</div>
 
     <ToolLayoutRenderer
@@ -30,6 +34,7 @@ const route = useRoute()
 
 const loading = ref(false)
 const toolConfig = ref<ToolConfig>()
+const configErrors = ref<string[]>([])
 const toolState = reactive<Record<string, unknown>>({})
 
 watch(
@@ -59,13 +64,26 @@ watch(
 async function loadTool(slug: string) {
   loading.value = true
   toolConfig.value = undefined
+  configErrors.value = []
   clearToolState()
 
-  const config = await fetchToolConfig(slug)
-  toolConfig.value = config
+  const result = await fetchToolConfig(slug)
 
-  if (config) {
-    restoreToolState(config)
+  if (result.status === 'invalid') {
+    configErrors.value = result.errors
+    loading.value = false
+    return
+  }
+
+  if (result.status === 'not-found') {
+    loading.value = false
+    return
+  }
+
+  toolConfig.value = result.config
+
+  if (result.config) {
+    restoreToolState(result.config)
   }
 
   loading.value = false

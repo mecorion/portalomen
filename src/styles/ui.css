@@ -1512,10 +1512,21 @@
 }
 
 .tool-runtime-status {
+  display: grid;
+  gap: 8px;
   padding: 16px;
   color: var(--color-muted);
   font-size: 14px;
   font-weight: 800;
+}
+
+.tool-runtime-status--error {
+  color: #b42318;
+}
+
+.tool-runtime-status--error span {
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .tool-runtime-layout {

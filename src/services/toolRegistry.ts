@@ -1,8 +1,17 @@
 import manticaConfig from '../db/tools/mantica.json'
 import poirotConfig from '../db/tools/poirot.json'
 import type { ToolConfig } from '../types/toolConfig'
+import { validateToolConfig } from '../types/toolConfigValidation'
 
-const toolConfigs = [poirotConfig, manticaConfig] as ToolConfig[]
+const rawToolConfigs = [poirotConfig, manticaConfig] as unknown[]
+const toolConfigEntries = rawToolConfigs.map((rawConfig) => ({
+  rawConfig,
+  validation: validateToolConfig(rawConfig)
+}))
+const toolValidationResults = toolConfigEntries.map((entry) => entry.validation)
+const toolConfigs = toolValidationResults
+  .filter((result) => result.valid)
+  .map((result) => result.config)
 
 export type ToolNavigationItem = {
   label: string
@@ -22,6 +31,23 @@ export type ToolCatalogItem = {
   order: number
 }
 
+export type ToolConfigLoadResult =
+  | {
+    status: 'success'
+    config: ToolConfig
+    errors: []
+  }
+  | {
+    status: 'not-found'
+    config?: undefined
+    errors: []
+  }
+  | {
+    status: 'invalid'
+    config?: undefined
+    errors: string[]
+  }
+
 export function getToolNavigationItems(): ToolNavigationItem[] {
   return [
     {
@@ -34,6 +60,8 @@ export function getToolNavigationItems(): ToolNavigationItem[] {
 }
 
 export async function fetchToolCatalog(): Promise<ToolCatalogItem[]> {
+  reportInvalidToolConfigs()
+
   return toolConfigs
     .map((tool) => ({
       id: tool.id,
@@ -48,16 +76,55 @@ export async function fetchToolCatalog(): Promise<ToolCatalogItem[]> {
     .sort((left, right) => left.order - right.order)
 }
 
-export async function fetchToolConfig(slug: string): Promise<ToolConfig | undefined> {
+export async function fetchToolConfig(slug: string): Promise<ToolConfigLoadResult> {
+  const entry = toolConfigEntries.find(({ rawConfig, validation }) => {
+    return validation.valid
+      ? validation.config.slug === slug
+      : getRawToolSlug(rawConfig) === slug
+  })
+
+  if (entry && !entry.validation.valid) {
+    return {
+      status: 'invalid',
+      errors: entry.validation.errors
+    }
+  }
+
   const tool = toolConfigs.find((config) => config.slug === slug)
 
   if (!tool) {
-    return undefined
+    return {
+      status: 'not-found',
+      errors: []
+    }
   }
 
   if (tool.persistence.configCache) {
     localStorage.setItem(`${tool.persistence.key}:config`, JSON.stringify(tool))
   }
 
-  return structuredClone(tool)
+  return {
+    status: 'success',
+    config: structuredClone(tool),
+    errors: []
+  }
+}
+
+function reportInvalidToolConfigs() {
+  const invalidResults = toolValidationResults.filter((result) => !result.valid)
+
+  if (!invalidResults.length) {
+    return
+  }
+
+  console.warn('Некорректные конфиги инструментов:', invalidResults.map((result) => result.errors))
+}
+
+function getRawToolSlug(value: unknown) {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    return undefined
+  }
+
+  const slug = (value as Record<string, unknown>).slug
+  return typeof slug === 'string' ? slug : undefined
 }
