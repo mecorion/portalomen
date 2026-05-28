@@ -14,7 +14,7 @@
     <ToolLayoutRenderer
       v-else
       :config="toolConfig"
-      :data-sources="toolDataSources"
+      :data-sources="filteredDataSources"
       :state="toolState"
       @state-change="setToolState"
     />
@@ -22,12 +22,13 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 import ToolLayoutRenderer from '../../components/tools/ToolLayoutRenderer.vue'
 import { loadPersistedState, savePersistedState } from '../../composables/usePersistedState'
+import { applyToolDataFilters } from '../../services/toolDataFilters'
 import { fetchToolDataSources } from '../../services/toolDataRegistry'
 import { fetchToolConfig } from '../../services/toolRegistry'
 import type { ToolConfig, ToolDataSources } from '../../types/toolConfig'
@@ -39,6 +40,10 @@ const toolConfig = ref<ToolConfig>()
 const toolDataSources = ref<ToolDataSources>({})
 const configErrors = ref<string[]>([])
 const toolState = reactive<Record<string, unknown>>({})
+
+const filteredDataSources = computed(() => {
+  return applyToolDataFilters(toolDataSources.value, toolState)
+})
 
 watch(
   () => route.params.slug,

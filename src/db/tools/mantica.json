@@ -456,7 +456,10 @@
   },
   "dataSources": {
     "manticaPoints": {
-      "id": "manticaPoints"
+      "id": "manticaPoints",
+      "filterBy": {
+        "analysisPeriod": "date"
+      }
     }
   }
 }

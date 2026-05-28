@@ -36,7 +36,6 @@ import type {
   ToolDataSource,
   ToolTableComponentConfig
 } from '../../../types/toolConfig'
-import { getFilteredRows } from './toolRendererUtils'
 
 const props = defineProps<{
   component: ToolTableComponentConfig
@@ -50,7 +49,13 @@ defineEmits<{
 
 const rows = computed(() => getFilteredRows(
   props.component.dataSourceId,
-  props.dataSources,
-  props.state
+  props.dataSources
 ))
+
+function getFilteredRows(
+  dataSourceId: string,
+  dataSources: Record<string, ToolDataSource>
+) {
+  return dataSources[dataSourceId]?.rows ?? []
+}
 </script>

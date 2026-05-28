@@ -26,8 +26,7 @@ import type {
 } from '../../../types/toolConfig'
 import {
   formatStateValue,
-  formatToolValue,
-  getFilteredRows
+  formatToolValue
 } from './toolRendererUtils'
 
 const props = defineProps<{
@@ -46,7 +45,7 @@ const selectedRow = computed(() => {
   }
 
   const selectedIndex = Number(props.state[props.component.selectedIndexStateKey ?? 'selectedIndex'] ?? 0)
-  const rows = getFilteredRows(props.component.dataSourceId, props.dataSources, props.state)
+  const rows = props.dataSources[props.component.dataSourceId]?.rows ?? []
 
   return rows[selectedIndex] ?? rows[0]
 })

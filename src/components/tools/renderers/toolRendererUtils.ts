@@ -1,29 +1,6 @@
 import type {
-  ToolDataRow,
-  ToolDataSource,
   ToolInfoMetricConfig
 } from '../../../types/toolConfig'
-
-export function getFilteredRows(
-  dataSourceId: string,
-  dataSources: Record<string, ToolDataSource>,
-  state: Record<string, unknown>
-): ToolDataRow[] {
-  const dataSource = dataSources[dataSourceId]
-
-  if (!dataSource) {
-    return []
-  }
-
-  const filterBy = dataSource.filterBy ?? {}
-
-  return dataSource.rows.filter((row) => {
-    return Object.entries(filterBy).every(([stateKey, rowField]) => {
-      const stateValue = state[stateKey]
-      return stateValue === undefined || stateValue === '' || stateValue === 'all' || row[rowField] === stateValue
-    })
-  })
-}
 
 export function getStringState(state: Record<string, unknown>, key: string): string {
   return String(state[key] ?? '')

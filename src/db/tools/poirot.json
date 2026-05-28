@@ -362,7 +362,8 @@
         "rc": "rc",
         "tt": "tt",
         "group": "group",
-        "position": "position"
+        "position": "position",
+        "period": "date"
       }
     }
   }
