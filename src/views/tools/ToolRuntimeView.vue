@@ -22,12 +22,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 import AppShellLayout from '../../components/layout/AppShellLayout.vue'
 import ToolLayoutRenderer from '../../components/tools/ToolLayoutRenderer.vue'
-import { loadPersistedState, savePersistedState } from '../../composables/usePersistedState'
+import { useToolRuntimeState } from '../../composables/useToolRuntimeState'
 import { applyToolDataFilters } from '../../services/toolDataFilters'
 import { fetchToolDataSources } from '../../services/toolDataRegistry'
 import { fetchToolConfig } from '../../services/toolRegistry'
@@ -39,7 +39,12 @@ const loading = ref(false)
 const toolConfig = ref<ToolConfig>()
 const toolDataSources = ref<ToolDataSources>({})
 const configErrors = ref<string[]>([])
-const toolState = reactive<Record<string, unknown>>({})
+const {
+  state: toolState,
+  restore: restoreToolState,
+  clear: clearToolState,
+  setValue: setToolState
+} = useToolRuntimeState(toolConfig)
 
 const filteredDataSources = computed(() => {
   return applyToolDataFilters(toolDataSources.value, toolState)
@@ -51,22 +56,6 @@ watch(
     await loadTool(String(slug ?? ''))
   },
   { immediate: true }
-)
-
-watch(
-  toolState,
-  () => {
-    if (!toolConfig.value?.persistence.state) {
-      return
-    }
-
-    savePersistedState(
-      `${toolConfig.value.persistence.key}:state`,
-      { ...toolState },
-      toolConfig.value.version
-    )
-  },
-  { deep: true }
 )
 
 async function loadTool(slug: string) {
@@ -111,25 +100,6 @@ async function loadTool(slug: string) {
   }
 
   loading.value = false
-}
-
-function restoreToolState(config: ToolConfig) {
-  const storedState = loadPersistedState<Record<string, unknown>>(
-    `${config.persistence.key}:state`,
-    config.version
-  )
-
-  Object.assign(toolState, config.defaultState, storedState ?? {})
-}
-
-function clearToolState() {
-  Object.keys(toolState).forEach((key) => {
-    delete toolState[key]
-  })
-}
-
-function setToolState(key: string, value: unknown) {
-  toolState[key] = value
 }
 
 function handleExport() {
