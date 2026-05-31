@@ -1,4 +1,6 @@
 export { createApiClient } from './client'
+export { createHttpToolApi } from './httpToolApi'
+export { getToolApi } from './toolApiProvider'
 export { mockToolApi } from './mockToolApi'
 export type {
   ApiClient,

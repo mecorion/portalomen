@@ -1,4 +1,4 @@
-import { mockToolApi } from '../api'
+import { getToolApi } from '../api'
 import type {
   ToolCatalogItem,
   ToolConfigLoadResult,
@@ -12,15 +12,15 @@ export type {
 } from '../api'
 
 export async function getToolNavigationItems(): Promise<ToolNavigationItem[]> {
-  return mockToolApi.listNavigationItems()
+  return getToolApi().listNavigationItems()
 }
 
 export async function fetchToolCatalog(): Promise<ToolCatalogItem[]> {
-  return mockToolApi.listTools()
+  return getToolApi().listTools()
 }
 
 export async function fetchToolConfig(slug: string): Promise<ToolConfigLoadResult> {
-  const result = await mockToolApi.getToolConfig(slug)
+  const result = await getToolApi().getToolConfig(slug)
 
   if (result.status === 'success' && result.config.persistence.configCache) {
     localStorage.setItem(`${result.config.persistence.key}:config`, JSON.stringify(result.config))
