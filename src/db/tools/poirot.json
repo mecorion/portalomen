@@ -357,6 +357,72 @@
   "dataSources": {
     "poirotRows": {
       "id": "poirotRows",
+      "fields": {
+        "procId": {
+          "label": "proc_id",
+          "type": "string"
+        },
+        "rc": {
+          "label": "РЦ",
+          "type": "string"
+        },
+        "tt": {
+          "label": "ТТ",
+          "type": "string"
+        },
+        "group": {
+          "label": "Группа",
+          "type": "string"
+        },
+        "position": {
+          "label": "Позиция",
+          "type": "string"
+        },
+        "date": {
+          "label": "Дата",
+          "type": "date"
+        },
+        "dateShort": {
+          "label": "Дата",
+          "type": "string"
+        },
+        "metric1": {
+          "label": "Показатель 1",
+          "type": "number"
+        },
+        "metric2": {
+          "label": "Показатель 2",
+          "type": "number"
+        },
+        "metric3": {
+          "label": "Показатель 3",
+          "type": "number"
+        },
+        "metric4": {
+          "label": "Показатель 4",
+          "type": "number"
+        },
+        "metric5": {
+          "label": "Показатель 5",
+          "type": "number"
+        },
+        "metric6": {
+          "label": "Показатель 6",
+          "type": "number"
+        },
+        "metric7": {
+          "label": "Показатель 7",
+          "type": "number"
+        },
+        "metric8": {
+          "label": "Показатель 8",
+          "type": "number"
+        },
+        "metric9": {
+          "label": "Показатель 9",
+          "type": "number"
+        }
+      },
       "filterBy": {
         "procId": "procId",
         "rc": "rc",

@@ -457,6 +457,32 @@
   "dataSources": {
     "manticaPoints": {
       "id": "manticaPoints",
+      "fields": {
+        "date": {
+          "label": "Дата",
+          "type": "date"
+        },
+        "dateShort": {
+          "label": "Дата",
+          "type": "string"
+        },
+        "salesGt": {
+          "label": "Продажи ГТ",
+          "type": "number"
+        },
+        "serviceLevel": {
+          "label": "Уровень сервиса",
+          "type": "number"
+        },
+        "fullness": {
+          "label": "Наполненность",
+          "type": "number"
+        },
+        "unitPrice": {
+          "label": "Цена за единицу",
+          "type": "number"
+        }
+      },
       "filterBy": {
         "analysisPeriod": "date"
       }
