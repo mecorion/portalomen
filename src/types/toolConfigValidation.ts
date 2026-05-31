@@ -16,10 +16,17 @@ export type ToolConfigValidationResult =
     errors: string[]
   }
 
+type ValidationContext = {
+  areaIds: Set<string>
+  componentIds: Set<string>
+  filterIds: Set<string>
+}
+
 const layoutTypes = ['filters-left-main-stack', 'point-filters-chart']
 const densities = ['compact', 'comfortable', 'spacious']
 const componentTypes = ['filters', 'chart', 'table', 'info-panel']
 const filterTypes = ['select', 'dateRange', 'search']
+const dataFieldTypes = ['string', 'number', 'date', 'boolean']
 
 export function validateToolConfig(value: unknown): ToolConfigValidationResult {
   const errors: string[] = []
@@ -40,12 +47,21 @@ export function validateToolConfig(value: unknown): ToolConfigValidationResult {
   validateNavigation(value.navigation, errors)
   validatePersistence(value.persistence, errors)
 
-  if (!isRecord(value.defaultState)) {
+  const defaultState = isRecord(value.defaultState) ? value.defaultState : undefined
+
+  if (!defaultState) {
     errors.push('defaultState должен быть объектом')
   }
 
   validateDataSources(value.dataSources, errors)
-  validateLayout(value.layout, value.dataSources, errors)
+
+  const context = createValidationContext()
+  validateLayout(value.layout, value.dataSources, context, errors)
+  validateDataSourceBindings(value.dataSources, context.filterIds, errors)
+
+  if (defaultState) {
+    validateDefaultState(defaultState, context.filterIds, errors)
+  }
 
   if (errors.length) {
     return {
@@ -109,13 +125,51 @@ function validateDataSources(value: unknown, errors: string[]) {
 
     requiredString(dataSource, 'id', errors, path)
 
+    if (!isRecord(dataSource.fields) || !Object.keys(dataSource.fields).length) {
+      errors.push(`${path}.fields должен быть непустым объектом`)
+    } else {
+      validateDataSourceFields(dataSource.fields, path, errors)
+    }
+
     if (dataSource.filterBy !== undefined && !isStringRecord(dataSource.filterBy)) {
       errors.push(`${path}.filterBy должен быть объектом string -> string`)
     }
   })
 }
 
-function validateLayout(layout: unknown, dataSources: unknown, errors: string[]) {
+function validateDataSourceFields(
+  fields: Record<string, unknown>,
+  path: string,
+  errors: string[]
+) {
+  Object.entries(fields).forEach(([fieldName, fieldConfig]) => {
+    const fieldPath = `${path}.fields.${fieldName}`
+
+    if (!fieldName) {
+      errors.push(`${path}.fields содержит пустое имя поля`)
+    }
+
+    if (!isRecord(fieldConfig)) {
+      errors.push(`${fieldPath} должен быть объектом`)
+      return
+    }
+
+    if (!isOneOf(fieldConfig.type, dataFieldTypes)) {
+      errors.push(`${fieldPath}.type должен быть одним из: ${dataFieldTypes.join(', ')}`)
+    }
+
+    if (fieldConfig.label !== undefined && typeof fieldConfig.label !== 'string') {
+      errors.push(`${fieldPath}.label должен быть строкой`)
+    }
+  })
+}
+
+function validateLayout(
+  layout: unknown,
+  dataSources: unknown,
+  context: ValidationContext,
+  errors: string[]
+) {
   if (!isRecord(layout)) {
     errors.push('layout должен быть объектом')
     return
@@ -137,11 +191,17 @@ function validateLayout(layout: unknown, dataSources: unknown, errors: string[])
   const dataSourceMap = isRecord(dataSources) ? dataSources as Record<string, ToolDataSourceConfig> : {}
 
   layout.areas.forEach((area, areaIndex) => {
-    validateArea(area, areaIndex, dataSourceMap, errors)
+    validateArea(area, areaIndex, dataSourceMap, context, errors)
   })
 }
 
-function validateArea(value: unknown, index: number, dataSources: Record<string, ToolDataSourceConfig>, errors: string[]) {
+function validateArea(
+  value: unknown,
+  index: number,
+  dataSources: Record<string, ToolDataSourceConfig>,
+  context: ValidationContext,
+  errors: string[]
+) {
   const path = `layout.areas[${index}]`
 
   if (!isRecord(value)) {
@@ -150,6 +210,7 @@ function validateArea(value: unknown, index: number, dataSources: Record<string,
   }
 
   requiredString(value, 'id', errors, path)
+  registerUniqueString(value.id, context.areaIds, `${path}.id`, 'area.id', errors)
 
   if (!Array.isArray(value.components)) {
     errors.push(`${path}.components должен быть массивом`)
@@ -157,7 +218,7 @@ function validateArea(value: unknown, index: number, dataSources: Record<string,
   }
 
   value.components.forEach((component, componentIndex) => {
-    validateComponent(component, `${path}.components[${componentIndex}]`, dataSources, errors)
+    validateComponent(component, `${path}.components[${componentIndex}]`, dataSources, context, errors)
   })
 }
 
@@ -165,6 +226,7 @@ function validateComponent(
   value: unknown,
   path: string,
   dataSources: Record<string, ToolDataSourceConfig>,
+  context: ValidationContext,
   errors: string[]
 ) {
   if (!isRecord(value)) {
@@ -173,6 +235,7 @@ function validateComponent(
   }
 
   requiredString(value, 'id', errors, path)
+  registerUniqueString(value.id, context.componentIds, `${path}.id`, 'component.id', errors)
 
   if (!isOneOf(value.type, componentTypes)) {
     errors.push(`${path}.type должен быть одним из: ${componentTypes.join(', ')}`)
@@ -182,13 +245,14 @@ function validateComponent(
   const component = value as ToolComponentConfig
 
   if (component.type === 'filters') {
-    validateFiltersComponent(component, path, errors)
+    validateFiltersComponent(component, path, context, errors)
     return
   }
 
   if (component.type === 'chart') {
     validateDataSourceReference(component.dataSourceId, path, dataSources, errors)
     requiredString(component, 'labelField', errors, path)
+    validateDataSourceFieldReference(component.dataSourceId, component.labelField, `${path}.labelField`, dataSources, errors)
 
     if (!isRecord(component.chart)) {
       errors.push(`${path}.chart должен быть объектом`)
@@ -207,6 +271,13 @@ function validateComponent(
 
       requiredString(series, 'name', errors, `${path}.chart.series[${index}]`)
       requiredString(series, 'field', errors, `${path}.chart.series[${index}]`)
+      validateDataSourceFieldReference(
+        component.dataSourceId,
+        typeof series.field === 'string' ? series.field : undefined,
+        `${path}.chart.series[${index}].field`,
+        dataSources,
+        errors
+      )
     })
 
     return
@@ -228,6 +299,13 @@ function validateComponent(
 
       requiredString(column, 'prop', errors, `${path}.columns[${index}]`)
       requiredString(column, 'label', errors, `${path}.columns[${index}]`)
+      validateDataSourceFieldReference(
+        component.dataSourceId,
+        typeof column.prop === 'string' ? column.prop : undefined,
+        `${path}.columns[${index}].prop`,
+        dataSources,
+        errors
+      )
     })
 
     return
@@ -236,15 +314,29 @@ function validateComponent(
   if (component.type === 'info-panel') {
     if (component.dataSourceId) {
       validateDataSourceReference(component.dataSourceId, path, dataSources, errors)
+      validateDataSourceFieldReference(component.dataSourceId, component.dateField, `${path}.dateField`, dataSources, errors)
     }
 
     if (!Array.isArray(component.metrics) || !component.metrics.length) {
       errors.push(`${path}.metrics должен быть непустым массивом`)
     }
+
+    component.metrics?.forEach((metric, index) => {
+      validateInfoMetric(metric, `${path}.metrics[${index}]`, component.dataSourceId, dataSources, errors)
+    })
+
+    component.context?.forEach((metric, index) => {
+      validateInfoMetric(metric, `${path}.context[${index}]`, component.dataSourceId, dataSources, errors)
+    })
   }
 }
 
-function validateFiltersComponent(component: Extract<ToolComponentConfig, { type: 'filters' }>, path: string, errors: string[]) {
+function validateFiltersComponent(
+  component: Extract<ToolComponentConfig, { type: 'filters' }>,
+  path: string,
+  context: ValidationContext,
+  errors: string[]
+) {
   if (!Array.isArray(component.fields) || !component.fields.length) {
     errors.push(`${path}.fields должен быть непустым массивом`)
     return
@@ -254,6 +346,7 @@ function validateFiltersComponent(component: Extract<ToolComponentConfig, { type
     const fieldPath = `${path}.fields[${index}]`
 
     requiredString(field, 'id', errors, fieldPath)
+    registerUniqueString(field.id, context.filterIds, `${fieldPath}.id`, 'filter.id', errors)
     requiredString(field, 'label', errors, fieldPath)
 
     if (!isOneOf(field.type, filterTypes)) {
@@ -280,6 +373,108 @@ function validateDataSourceReference(
   if (!dataSources[dataSourceId]) {
     errors.push(`${path}.dataSourceId ссылается на неизвестный dataSource: ${dataSourceId}`)
   }
+}
+
+function validateDataSourceFieldReference(
+  dataSourceId: string | undefined,
+  fieldName: string | undefined,
+  path: string,
+  dataSources: Record<string, ToolDataSourceConfig>,
+  errors: string[]
+) {
+  if (!dataSourceId || !fieldName) {
+    return
+  }
+
+  const dataSource = dataSources[dataSourceId]
+
+  if (!dataSource || !dataSource.fields[fieldName]) {
+    errors.push(`${path} ссылается на неизвестное поле dataSource ${dataSourceId}: ${fieldName}`)
+  }
+}
+
+function validateDataSourceBindings(
+  dataSources: unknown,
+  filterIds: Set<string>,
+  errors: string[]
+) {
+  if (!isRecord(dataSources)) {
+    return
+  }
+
+  Object.entries(dataSources).forEach(([dataSourceId, dataSource]) => {
+    if (!isRecord(dataSource) || !isStringRecord(dataSource.filterBy)) {
+      return
+    }
+
+    Object.entries(dataSource.filterBy).forEach(([filterId, fieldName]) => {
+      if (!filterIds.has(filterId)) {
+        errors.push(`dataSources.${dataSourceId}.filterBy.${filterId} ссылается на неизвестный filter.id`)
+      }
+
+      if (!isRecord(dataSource.fields) || !dataSource.fields[fieldName]) {
+        errors.push(`dataSources.${dataSourceId}.filterBy.${filterId} ссылается на неизвестное поле: ${fieldName}`)
+      }
+    })
+  })
+}
+
+function validateDefaultState(
+  defaultState: Record<string, unknown>,
+  filterIds: Set<string>,
+  errors: string[]
+) {
+  filterIds.forEach((filterId) => {
+    if (!(filterId in defaultState)) {
+      errors.push(`defaultState должен содержать значение для filter.id ${filterId}`)
+    }
+  })
+}
+
+function validateInfoMetric(
+  metric: unknown,
+  path: string,
+  dataSourceId: string | undefined,
+  dataSources: Record<string, ToolDataSourceConfig>,
+  errors: string[]
+) {
+  if (!isRecord(metric)) {
+    errors.push(`${path} должен быть объектом`)
+    return
+  }
+
+  requiredString(metric, 'label', errors, path)
+
+  if (metric.field !== undefined) {
+    validateDataSourceFieldReference(dataSourceId, String(metric.field), `${path}.field`, dataSources, errors)
+  }
+}
+
+function createValidationContext(): ValidationContext {
+  return {
+    areaIds: new Set(),
+    componentIds: new Set(),
+    filterIds: new Set()
+  }
+}
+
+function registerUniqueString(
+  value: unknown,
+  values: Set<string>,
+  path: string,
+  entityName: string,
+  errors: string[]
+) {
+  if (typeof value !== 'string' || !value) {
+    return
+  }
+
+  if (values.has(value)) {
+    errors.push(`${path} должен быть уникальным, повторяется ${entityName}: ${value}`)
+    return
+  }
+
+  values.add(value)
 }
 
 function requiredString(value: Record<string, unknown>, key: string, errors: string[], path?: string) {
