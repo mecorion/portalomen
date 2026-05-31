@@ -78,6 +78,12 @@ async function loadTool(slug: string) {
     return
   }
 
+  if (result.status === 'forbidden') {
+    configErrors.value = ['Нет доступа к инструменту']
+    loading.value = false
+    return
+  }
+
   const dataResult = await fetchToolDataSources(result.config)
 
   if (dataResult.status === 'invalid') {
@@ -88,6 +94,12 @@ async function loadTool(slug: string) {
 
   if (dataResult.status === 'not-found') {
     configErrors.value = [`Данные инструмента ${result.config.slug} не найдены`]
+    loading.value = false
+    return
+  }
+
+  if (dataResult.status === 'forbidden') {
+    configErrors.value = ['Нет доступа к данным инструмента']
     loading.value = false
     return
   }

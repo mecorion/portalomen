@@ -103,9 +103,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getToolNavigationItems } from '../../services/toolRegistry'
+import {
+  getToolNavigationItems,
+  type ToolNavigationItem
+} from '../../services/toolRegistry'
 
 defineProps<{
   collapsed?: boolean
@@ -119,12 +122,13 @@ const emit = defineEmits<{
 
 const route = useRoute()
 const router = useRouter()
+const toolNavigationItems = ref<ToolNavigationItem[]>([])
 
 const currentPath = computed(() => route.path)
 
-const menuItems = [
+const menuItems = computed(() => [
   { label: 'Дашборд', path: '/', icon: 'M4 13h6V4H4v9ZM14 20h6V4h-6v16ZM4 20h6v-3H4v3Z', action: goDashboard },
-  ...getToolNavigationItems().map((item) => ({
+  ...toolNavigationItems.value.map((item) => ({
     label: item.label,
     path: item.path,
     icon: item.icon,
@@ -138,7 +142,11 @@ const menuItems = [
   { label: 'Маркетинг', icon: 'M4 13l4-8v14l-4-6ZM8 13h4l8 4V7l-8 4H8' },
   { label: 'Финансы', icon: 'M12 3v18M17 7.5C16.2 6.6 14.7 6 12.8 6 10.2 6 8 7.1 8 9s2 2.5 4 3 4 1 4 3-2 3-4.5 3C9.7 18 8.2 17.4 7 16.5' },
   { label: 'Настройки', icon: 'M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5ZM19 12a7 7 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a7 7 0 0 0-1.7-1L14.5 3h-5l-.3 3a7 7 0 0 0-1.7 1L5.1 6l-2 3.5 2 1.5A7 7 0 0 0 5 12c0 .3 0 .7.1 1l-2 1.5 2 3.5 2.4-1a7 7 0 0 0 1.7 1l.3 3h5l.3-3a7 7 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5c.1-.3.1-.7.1-1Z' }
-]
+])
+
+onMounted(async () => {
+  toolNavigationItems.value = await getToolNavigationItems()
+})
 
 function goDashboard() {
   goPath('/')
