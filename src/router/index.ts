@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+import AdminView from '../views/admin/AdminView.vue'
 import DashboardView from '../views/dashboard/DashboardView.vue'
 import DocsView from '../views/docs/DocsView.vue'
 import ToolsCatalogView from '../views/tools/ToolsCatalogView.vue'
@@ -23,6 +24,11 @@ export const router = createRouter({
       path: '/tools/:slug',
       name: 'tool-runtime',
       component: ToolRuntimeView
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView
     },
     {
       path: '/ui',

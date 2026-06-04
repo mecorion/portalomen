@@ -134,6 +134,7 @@ const menuItems = computed(() => [
     icon: item.icon,
     action: () => goPath(item.path)
   })),
+  { label: 'Админка', path: '/admin', icon: 'M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4ZM9 12l2 2 4-5', action: () => goPath('/admin') },
   { label: 'UI Kit', path: '/ui', icon: 'M12 3L4 7l8 4 8-4-8-4ZM4 12l8 4 8-4M4 17l8 4 8-4', action: goShowcase },
   { label: 'Документация', path: '/docs', icon: 'M5 4h10a4 4 0 0 1 4 4v12H7a2 2 0 0 1-2-2V4ZM7 4v14M9 8h6M9 12h6', action: () => goPath('/docs') },
   { label: 'Продажи', icon: 'M4 19h16M7 16V9M12 16V5M17 16v-4' },
